@@ -1,30 +1,46 @@
 //Je fais appel à fetch pour l'URL de l'API
 fetch ("http://localhost:3000/api/products")
     //Première promesse, qui récupére la réponse en json
-    .then(function(res){
+    .then(reponse)
+    //Deuxième promesse avec ma fonction de contenu
+    .then(affichageArticles)
+    //Message d'erreur si le serveur ne répond pas
+    .catch(error)
+
+    /*              Fonctions
+    Fonction pour récupérer la réponse en json*/
+    function reponse(res){
         if(res.ok){
             return res.json();
         }
-    })
-    //Deuxième promesse avec ma fonction de contenu
-    .then(function allarticles (article){
-        //Boucle for avec la variable "products" de l'argument "article"
-        for (const products of article){
+    }
+    //Fonction d'affichage des articles
+    function affichageArticles(articles){
+        //Boucle for avec la variable "product" de l'argument "articles"
+        for (const product of articles){
             //Récupération des informations de l'id "items"
             let cardItems = document.getElementById("items");
             //Contenu à modifier
-            cardItems.innerHTML +=`
-            <a href="./product.html?id=${products._id}">
-            <article>
-              <img src="${products.imageUrl}" alt="${products.altTxt}">
-              <h3 class="productName">${products.name}</h3>
-              <p class="productDescription">${products.description}</p>
-            </article>
-          </a>
-        `;
+            const lienElement = document.createElement("a")
+            const articleElement = document.createElement("article")
+            const imgElement = document.createElement("img")
+            const titleElement = document.createElement("h3")
+            const pElement = document.createElement("p")
+
+            cardItems.appendChild(lienElement)
+            lienElement.appendChild(articleElement)
+            articleElement.appendChild(imgElement)
+            articleElement.appendChild(titleElement)
+            articleElement.appendChild(pElement)
+
+            imgElement.src = product.imageUrl
+            imgElement.alt = product.altTxt
+            titleElement.h3 = product.name
+            
         }
-    })
-    //Message d'erreur si le serveur ne répond pas
-    .catch(function(error){
+    }
+    //Fonction de message d'erreur
+    function error(e){
         alert("Le serveur ne répond pas !!!");
-    })
+    }
+    
