@@ -21,21 +21,23 @@ fetch ("http://localhost:3000/api/products")
             //Récupération des informations de l'id "items"
             let cardItems = document.getElementById("items");
             //Contenu à modifier
-            const lienElement = document.createElement("a")
-            const articleElement = document.createElement("article")
-            const imgElement = document.createElement("img")
-            const titleElement = document.createElement("h3")
-            const pElement = document.createElement("p")
+            const lienElement = document.createElement("a");
+            const articleElement = document.createElement("article");
+            const imgElement = document.createElement("img");
+            const titleElement = document.createElement("h3");
+            const pElement = document.createElement("p");
 
-            cardItems.appendChild(lienElement)
-            lienElement.appendChild(articleElement)
-            articleElement.appendChild(imgElement)
-            articleElement.appendChild(titleElement)
-            articleElement.appendChild(pElement)
+            cardItems.appendChild(lienElement);
+            lienElement.appendChild(articleElement);
+            articleElement.appendChild(imgElement);
+            articleElement.appendChild(titleElement);
+            articleElement.appendChild(pElement);
 
-            imgElement.src = product.imageUrl
-            imgElement.alt = product.altTxt
-            titleElement.h3 = product.name
+            imgElement.src = product.imageUrl;
+            imgElement.alt = product.altTxt;
+            lienElement.href = product._id;
+            titleElement.innerText = product.name;
+            pElement.innerText = product.description;
             
         }
     }
