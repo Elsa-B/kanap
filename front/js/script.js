@@ -20,25 +20,32 @@ fetch ("http://localhost:3000/api/products")
         for (const product of articles){
             //Récupération des informations de l'id "items"
             let cardItems = document.getElementById("items");
-            //Contenu à modifier
+            
+            /*Contenu à créer
+            Insertion du lien hypertexte*/
             const lienElement = document.createElement("a");
-            const articleElement = document.createElement("article");
-            const imgElement = document.createElement("img");
-            const titleElement = document.createElement("h3");
-            const pElement = document.createElement("p");
-
             cardItems.appendChild(lienElement);
-            lienElement.appendChild(articleElement);
-            articleElement.appendChild(imgElement);
-            articleElement.appendChild(titleElement);
-            articleElement.appendChild(pElement);
+            lienElement.href = `product.html?id=${product._id}`;
 
+            //Insertion de l'article
+            const articleElement = document.createElement("article");
+            lienElement.appendChild(articleElement);
+
+            //Insertion de l'image
+            const imgElement = document.createElement("img");
+            articleElement.appendChild(imgElement);
             imgElement.src = product.imageUrl;
             imgElement.alt = product.altTxt;
-            lienElement.href = product._id;
+
+            //Insertion du nom du produit
+            const titleElement = document.createElement("h3");
+            articleElement.appendChild(titleElement);
             titleElement.innerText = product.name;
-            pElement.innerText = product.description;
-            
+
+            //Insertion de la description
+            const pElement = document.createElement("p");
+            articleElement.appendChild(pElement);
+            pElement.innerText = product.description;   
         }
     }
     //Fonction de message d'erreur
