@@ -1,4 +1,4 @@
-//Lien entre la page d'accueil et les produits
+//                Lien entre la page d'accueil et les produits
 
 /*Mise en place d'une nouvelle URL.
 Utilisation de window pour récupérer la page courante*/
@@ -10,7 +10,7 @@ const id = urlParams.get('id');
 const urlProduct = `http://localhost:3000/api/products/${id}`;
 
 
-/*Variables pour l'affichage de mes produits
+/*                 Stockage de toutes les variables
 Variable de l'image*/
 const image = document.querySelector(".item__img");
 const imageProduct = document.createElement("img");
@@ -22,6 +22,10 @@ const pricePoduct = document.getElementById("price");
 const descriptionProduct = document.getElementById("description");
 //Variable de l'option
 const color = document.getElementById("colors");
+//Variable de la quantité
+const choiceQuantite = document.getElementById("quantity");
+//Variable du bouton "Ajouter au panier"
+const check = document.getElementById("addToCart");
 
 
 //Je fais appel à fetch pour l'URL de la page produit
@@ -58,5 +62,37 @@ fetch (urlProduct)
         color.appendChild(option);
         }   
     }
+    
+/*                 Ajout des produits dans le panier
 
-/*Ajout des produits dans le panier*/
+Récupération de la sélection de l'utilisateur et envoie dans le panier.
+Ecoute de la variable "check" au moment du clic de l'utilisateur*/
+check.addEventListener("click",(e)=>{
+    //Demande de non-exécution de l'évenement
+    e.preventDefault();
+    //Récupération de la sélection utilisateur avec l'ID, la quantité et la couleur
+    const choiceProduct = {
+        idStorage:id,
+        quantiteStorage:choiceQuantite.value,
+        couleurStorage:color.value,
+    }
+    console.log(choiceProduct);
+})
+
+/*                  LocalStorage
+Déclaration de la variable et conversion du format JSON au format javaScript*/
+let productLocalStorage = JSON.parse(localStorage.getItem("produit"));
+//Variable du localStorage
+const eltLocalStorage = () =>{
+    productLocalStorage.push(choiceProduct);
+    localStorage.setItem("produit", JSON.stringify(productLocalStorage)); 
+    //Si des produits sont enregistrés dans le localStorage
+    if(productLocalStorage){
+        eltLocalStorage();
+    }
+    //S'il n'y a pas de produits enregistés dans le localStorage
+    else{
+        productLocalStorage = [];
+        eltLocalStorage();
+    }  
+}
