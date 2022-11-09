@@ -77,22 +77,29 @@ check.addEventListener("click",(e)=>{
         couleurStorage:color.value,
     }
     console.log(choiceProduct);
-})
+    
+    /*                  LocalStorage
 
-/*                  LocalStorage
 Déclaration de la variable et conversion du format JSON au format javaScript*/
 let productLocalStorage = JSON.parse(localStorage.getItem("produit"));
-//Variable du localStorage
+//Ajout des produits dans le localstorage
 const eltLocalStorage = () =>{
+    //Ajout des éléments dans le tableau avec push
     productLocalStorage.push(choiceProduct);
+    //Conversion des données du format javaScript au format JSON
     localStorage.setItem("produit", JSON.stringify(productLocalStorage)); 
-    //Si des produits sont enregistrés dans le localStorage
-    if(productLocalStorage){
-        eltLocalStorage();
+}
+//Variable de confirmation d'ajout du produit
+const confirm = () => {
+    alert ("Le produit a été ajouté au panier");
     }
-    //S'il n'y a pas de produits enregistés dans le localStorage
-    else{
-        productLocalStorage = [];
-        eltLocalStorage();
-    }  
+});
+
+//Si il y a des produits dans le panier
+function productInBasket (){
+    if(productLocalStorage){
+        if(choiceQuantite>0 && choiceQuantite<100 && choiceQuantite== !0 && color== !0){
+            choiceQuantite.value += choiceQuantite.value
+        }
+    }
 }
