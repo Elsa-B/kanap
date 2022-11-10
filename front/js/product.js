@@ -43,7 +43,8 @@ fetch (urlProduct)
         alert("Le serveur ne répond pas !!!");
     })
 
-    function product (article){
+//Utilisation d'une fonction pour l'insertion des éléments du produit
+function product (article){
     //Insertion des images
     imageProduct.src = article.imageUrl;
     imageProduct.alt = article.altTxt;
@@ -60,8 +61,8 @@ fetch (urlProduct)
         const option = document.createElement("option");
         option.innerText = article.colors[i];
         color.appendChild(option);
-        }   
-    }
+    }   
+}
 
 /*                 Ajout des produits dans le panier
 
@@ -77,7 +78,7 @@ check.addEventListener("click",(e)=>{
         couleurStorage:color.value,
     };
     console.log(choiceProduct);
-
+    //Conversion des données du format JSON au format Javascript
     let productInBasket = JSON.parse(localStorage.getItem("basket"));
     //Variables de stockage
     const eltLocalStorage = () =>{
@@ -90,15 +91,19 @@ check.addEventListener("click",(e)=>{
     const confirm = () => {
         alert ("Le produit a été ajouté au panier");
     };
-    //Utilisation des conditions
+    /*Utilisation des conditions
+    Si on ajoute un produit au panier*/
     if(productInBasket){
+        // Utilisation de find qui renvoie la première valeur d'un élément dans un array
         const productOrdered = productInBasket.find( element => element.idStorage === id && element.couleurStorage === color.value)
+        //Si celui-ci existe déjà dans l'array
         if(productOrdered){
-        let newQuantity = parseInt(choiceProduct.quantiteStorage) + parseInt(productOrdered.quantiteStorage);
-        productOrdered.quantiteStorage = newQuantity;
-        localStorage.setItem("basket", JSON.stringify(productInBasket));
-        confirm();
-        
+            //Calcul pour ajouter les quantités dans l'array
+            let newQuantity = parseInt(choiceProduct.quantiteStorage) + parseInt(productOrdered.quantiteStorage);
+            productOrdered.quantiteStorage = newQuantity;
+            localStorage.setItem("basket", JSON.stringify(productInBasket));
+            confirm();
+        //Sinon, s'il n'y en a pas ajout d'une ligne
         }else{
             eltLocalStorage();
             confirm();
