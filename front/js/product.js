@@ -10,7 +10,7 @@ const id = urlParams.get('id');
 const urlProduct = `http://localhost:3000/api/products/${id}`;
 
 
-/*                 Stockage de toutes les variables
+/*                 Stockage des variables d'affichage produit
 Variable de l'image*/
 const image = document.querySelector(".item__img");
 const imageProduct = document.createElement("img");
@@ -62,7 +62,14 @@ fetch (urlProduct)
         color.appendChild(option);
         }   
     }
-    
+/*           Stockage des variables ajout des produits au panier
+Sélection utilisateur*/
+
+ /*                  LocalStorage
+
+Déclaration de la variable et conversion du format JSON au format javaScript*/
+//Ajout des produits dans le localstorage
+   
 /*                 Ajout des produits dans le panier
 
 Récupération de la sélection de l'utilisateur et envoie dans le panier.
@@ -71,35 +78,35 @@ check.addEventListener("click",(e)=>{
     //Demande de non-exécution de l'évenement
     e.preventDefault();
     //Récupération de la sélection utilisateur avec l'ID, la quantité et la couleur
-    const choiceProduct = {
+    const choiceProduct =  {
         idStorage:id,
         quantiteStorage:choiceQuantite.value,
         couleurStorage:color.value,
-    }
+    };
     console.log(choiceProduct);
-    
-    /*                  LocalStorage
-
-Déclaration de la variable et conversion du format JSON au format javaScript*/
-let productLocalStorage = JSON.parse(localStorage.getItem("produit"));
-//Ajout des produits dans le localstorage
+    let productLocalStorage= JSON.parse(localStorage.getItem("product"));
 const eltLocalStorage = () =>{
     //Ajout des éléments dans le tableau avec push
     productLocalStorage.push(choiceProduct);
     //Conversion des données du format javaScript au format JSON
-    localStorage.setItem("produit", JSON.stringify(productLocalStorage)); 
+    localStorage.setItem("product", JSON.stringify(productLocalStorage)); 
 }
 //Variable de confirmation d'ajout du produit
 const confirm = () => {
     alert ("Le produit a été ajouté au panier");
+    };
+   //Si il y a des produits dans le panier
+    if(productLocalStorage){
+        if(choiceQuantite.value>0 && choiceQuantite.value<100 && color.value===color.value && id===id){
+            eltLocalStorage();
+            confirm();
+        }
+            console.log(productLocalStorage);
+        }
+    //S'il n'y a pas de produits dans le panier
+    else{
+        productLocalStorage=[];
+        eltLocalStorage();
+        confirm();    
     }
 });
-
-//Si il y a des produits dans le panier
-function productInBasket (){
-    if(productLocalStorage){
-        if(choiceQuantite>0 && choiceQuantite<100 && choiceQuantite== !0 && color== !0){
-            choiceQuantite.value += choiceQuantite.value
-        }
-    }
-}
