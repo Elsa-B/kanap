@@ -62,14 +62,7 @@ fetch (urlProduct)
         color.appendChild(option);
         }   
     }
-/*           Stockage des variables ajout des produits au panier
-Sélection utilisateur*/
 
- /*                  LocalStorage
-
-Déclaration de la variable et conversion du format JSON au format javaScript*/
-//Ajout des produits dans le localstorage
-   
 /*                 Ajout des produits dans le panier
 
 Récupération de la sélection de l'utilisateur et envoie dans le panier.
@@ -84,30 +77,37 @@ check.addEventListener("click",(e)=>{
         couleurStorage:color.value,
     };
     console.log(choiceProduct);
-    let productLocalStorage= JSON.parse(localStorage.getItem("product"));
-const eltLocalStorage = () =>{
-    //Ajout des éléments dans le tableau avec push
-    productLocalStorage.push(choiceProduct);
-    //Conversion des données du format javaScript au format JSON
-    localStorage.setItem("product", JSON.stringify(productLocalStorage)); 
-}
-//Variable de confirmation d'ajout du produit
-const confirm = () => {
-    alert ("Le produit a été ajouté au panier");
+
+    let productInBasket = JSON.parse(localStorage.getItem("basket"));
+    //Variables de stockage
+    const eltLocalStorage = () =>{
+        //Ajout des éléments dans le tableau avec push
+        productInBasket.push(choiceProduct);
+        //Conversion des données du format javaScript au format JSON
+        localStorage.setItem("basket", JSON.stringify(productInBasket)); 
+    }
+    //Variable de confirmation d'ajout du produit
+    const confirm = () => {
+        alert ("Le produit a été ajouté au panier");
     };
-   //Si il y a des produits dans le panier
-    if(productLocalStorage){
-        if(choiceQuantite.value>0 && choiceQuantite.value<100 && color.value===color.value && id===id){
+    //Utilisation des conditions
+    if(productInBasket){
+        const productOrdered = productInBasket.find( element => element.idStorage === id && element.couleurStorage === color.value)
+        if(productOrdered){
+        let newQuantity = parseInt(choiceProduct.quantiteStorage) + parseInt(productOrdered.quantiteStorage);
+        productOrdered.quantiteStorage = newQuantity;
+        localStorage.setItem("basket", JSON.stringify(productInBasket));
+        confirm();
+        
+        }else{
             eltLocalStorage();
             confirm();
         }
-            console.log(productLocalStorage);
-        }
-        
-    //S'il n'y a pas de produits dans le panier
+    }
+    //S'il n'y a aucun produit dans le localStorage
     else{
-        productLocalStorage=[];
+        productInBasket = [];
         eltLocalStorage();
-        confirm();    
+        confirm();
     }
 });
