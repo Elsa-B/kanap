@@ -103,6 +103,7 @@ const confirm = () => {
         }
             console.log(productLocalStorage);
         }
+        
     //S'il n'y a pas de produits dans le panier
     else{
         productLocalStorage=[];
