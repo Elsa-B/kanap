@@ -1,7 +1,6 @@
 let productInBasket = JSON.parse(localStorage.getItem("basket"));
 console.log(productInBasket);
 
-
 /*         Stockage des variables d'affichage du tableau
 Récupération de l'id de section*/
 const section = document.querySelector("#cart__items");
@@ -36,17 +35,20 @@ const deleteInput = document.createElement("p");
 
 //Fonction de création de la structure 
 function displayProductInBasket(){
+    const productOrdered = productInBasket.find( element => element.idStorage === id && element.couleurStorage === color.value)
     for(i=0; i<productInBasket.length;i++){
         //Insertion de l'article
         section.appendChild(articleSection);
         articleSection.className = "cart__item";
+        articleSection.setAttribute("data-id",id);
+        articleSection.setAttribute("data-color",color.value);
         //Insertion d'une div
         articleSection.appendChild(divImage);
         divImage.className = "cart__item__img";
         //Insertion de l'image
         divImage.appendChild(imageSection);
-        imageSection.src = productInBasket[i].image;
-        imageSection.alt = productInBasket[i].color;
+        imageSection.src = productInBasket[i].imageUrl;
+        imageSection.alt = productInBasket[i].altTxt;
         //Insertion d'une div
         articleSection.appendChild(divContent);
         divContent.className = "cart__item__content";
@@ -58,10 +60,10 @@ function displayProductInBasket(){
         titleSection.innerText = productInBasket[i].name;
         //Insertion de la couleur
         divDescription.appendChild(colorSection);
-        colorSection.innerText = productInBasket[i].couleurStorage;
+        colorSection.innerText = productInBasket[i].colors;
         //Insertion du prix
         divDescription.appendChild(priceSection);
-        priceSection.innerText = productInBasket[i].description;
+        priceSection.innerText = productInBasket[i].price;
         //Insertion d'une div
         divContent.appendChild(settingsSection);
         settingsSection.className = "cart__item__content__settings";
@@ -78,7 +80,7 @@ function displayProductInBasket(){
         inputSection.setAttribute("name","itemQuantity");
         inputSection.setAttribute("min","1");
         inputSection.setAttribute("max","100");
-        inputSection.value = productInBasket[i].quantiteStorage;
+        inputSection.value = productInBasket[i];
         //Insertion d'une div
         settingsSection.appendChild(settingsDelete);
         settingsDelete.className = "cart__item__content__settings__delete";
@@ -88,12 +90,31 @@ function displayProductInBasket(){
         deleteInput.innerText = "Supprimer";
     }
 }
-
+//Récupération du localStorage
 if(productInBasket == null || productInBasket == 0){
     productInBasket = [];
     console.log(productInBasket);
 }else{
-    displayProductInBasket();
+    fetch ("http://localhost:3000/api/products")
+    .then((res) => {
+        if(res.ok){
+            return res.json();
+        }
+    })
+    .then(displayProductInBasket)
 }
 
 
+//Modification des produits de la page panier
+
+//Suppression des produits de la page panier
+
+/*Confirmation de la commande
+const firstName = document.getElementById("firstName");
+const lastName = document.getElementById("lastName");
+const address = document.getElementById("address");
+const city = document.getElementById("city");
+const mail = document.getElementById("email");
+const regexText = /^[a-z][A-Z][éèàëêïöô]{1,20}$/;
+const regexAdress = /^[a-z][A-Z][éèàëêïöô]{1,50}$/;
+const regexMail = /^[a-z A-Z 0-9]\.+@[a-z A-Z 0-9\.]$/;*/
