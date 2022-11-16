@@ -1,5 +1,4 @@
 let productInBasket = JSON.parse(localStorage.getItem("basket"));
-console.log(productInBasket);
 
 //Boucle de création de la structure 
 for(let product of productInBasket){
@@ -74,24 +73,29 @@ for(let product of productInBasket){
     settingsDelete.appendChild(deleteInput);
     deleteInput.className = "deleteItem";
     deleteInput.innerText = "Supprimer";
-    } 
-)}
+    }) 
+//Prix total
+const quantityTotal = document.querySelector("#totalQuantity");
+const priceTotal = document.querySelector("#totalPrice");
+
+//Quantité totale
+const quantityOfProducts = parseInt(product.quantiteStorage);
+const totalPriceProduct = quantityOfProducts * data.price;
+console.log(quantityOfProducts);
+console.log(totalPriceProduct);
+}
+
+
+
+
+
+
+
+
+
+
 
 //Modification des produits de la page panier
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 //Suppression des produits de la page panier
 /*Confirmation de la commande
