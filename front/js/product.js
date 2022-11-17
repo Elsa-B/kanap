@@ -69,6 +69,14 @@ let productInBasket = JSON.parse(localStorage.getItem("basket"));
 const confirm = () => {
     alert ("Le produit a été ajouté au panier");
 };
+//Variables de stockage
+function eltLocalStorage(choiceProduct){
+    //Ajout des éléments dans le tableau avec push
+    productInBasket.push(choiceProduct);
+    //Conversion des données du format javaScript au format JSON
+    localStorage.setItem("basket", JSON.stringify(productInBasket)); 
+}
+
 /*                 Ajout des produits dans le panier
 
 Récupération de la sélection de l'utilisateur et envoie dans le panier.
@@ -83,14 +91,7 @@ check.addEventListener("click",(e)=>{
         couleurStorage:color.value,
     };
     console.log(choiceProduct);
-    
-    //Variables de stockage
-    let eltLocalStorage = () =>{
-        //Ajout des éléments dans le tableau avec push
-        productInBasket.push(choiceProduct);
-        //Conversion des données du format javaScript au format JSON
-        localStorage.setItem("basket", JSON.stringify(productInBasket)); 
-    }
+    eltLocalStorage(choiceProduct)
     
     /*Utilisation des conditions
     Si on ajoute un produit au panier*/
