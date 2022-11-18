@@ -85,16 +85,7 @@ function displayProduct(productInBasket){
 }
 
 //Fonction de la quantité total
-
 //Fonction du prix total
-function priceTotal(price){
-    let totPrice = quantityOfProduct * priceOfProduct;
-    for (const total of price ){
-
-    }
-    
-    const priceOfProduct = data.price;
-}
 //const quantityOfProduct = product.quantiteStorage;
 //Modification des produits de la page panier
 //Suppression des produits de la page panier

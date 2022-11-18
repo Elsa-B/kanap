@@ -69,13 +69,7 @@ let productInBasket = JSON.parse(localStorage.getItem("basket"));
 const confirm = () => {
     alert ("Le produit a été ajouté au panier");
 };
-//Variables de stockage
-function eltLocalStorage(choiceProduct){
-    //Ajout des éléments dans le tableau avec push
-    productInBasket.push(choiceProduct);
-    //Conversion des données du format javaScript au format JSON
-    localStorage.setItem("basket", JSON.stringify(productInBasket)); 
-}
+
 
 /*                 Ajout des produits dans le panier
 
@@ -91,13 +85,19 @@ check.addEventListener("click",(e)=>{
         couleurStorage:color.value,
     };
     console.log(choiceProduct);
-    eltLocalStorage(choiceProduct)
+    //Variables de stockage
+    let eltLocalStorage= () =>{
+        //Ajout des éléments dans le tableau avec push
+        productInBasket.push(choiceProduct);
+        //Conversion des données du format javaScript au format JSON
+        localStorage.setItem("basket", JSON.stringify(productInBasket)); 
+    }
     
     /*Utilisation des conditions
     Si on ajoute un produit au panier*/
     if(productInBasket){
         // Utilisation de find qui renvoie la première valeur d'un élément dans un array
-        const productOrdered = productInBasket.find( element => element.idStorage === id && element.couleurStorage === color.value)
+        const productOrdered = productInBasket.find(element => element.idStorage === id && element.couleurStorage === color.value)
         //Si celui-ci existe déjà dans l'array
         if(productOrdered){
             //Calcul pour ajouter les quantités dans l'array
