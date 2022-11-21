@@ -77,13 +77,33 @@ for(let product of productInBasket){
     settingsDelete.appendChild(deleteInput);
     deleteInput.className = "deleteItem";
     deleteInput.innerText = "Supprimer";
-    totalQuantities(quantity);
-    totalPrice(price); 
+    //Utilisation de la fonction quantité total
+    totalQuantities(product.quantiteStorage);
+    //Utilisation de la fonction prix total
+    incrementationTotalPrice(product.quantiteStorage,data.price); 
     })   
 }
 
-
-
+/*Fonction et variables de la quantité total
+Pour la qt total, il faut sélectionner l'ID dans html. Utilisation de parseInt pour convertir un argument
+en une chaîne de caractère. Calcul totalqt=totalqt+quantitysum. Envoie du calcul avec inner.text*/
+const elementQuantity = document.getElementById("totalQuantity");
+let totalquantity =0;
+function totalQuantities(quantity){
+    const quantitysum =  parseInt(quantity);
+    totalquantity +=quantitysum;
+    elementQuantity.innerText = totalquantity;
+}
+/*Fonction et varirables du prix total
+Pour le prix total, il faut sélectionner l'ID dans html. Il faut réaliser le calcul de la qt*prix.
+Ensuite calcul totalPrice=tatalPrice*priceOfProduct. Insérer le prix dans le total avec inner.text*/
+let elementPrice = document.getElementById("totalPrice");
+let totalPrice = 0;
+function incrementationTotalPrice(qty,price){
+    let priceOfProduct = qty * price;
+    totalPrice += priceOfProduct;
+    elementPrice.innerText = totalPrice;
+}
 //Fonctions de messages
 const confirm = () => {
     alert ("Le produit a été supprimé");
@@ -91,30 +111,10 @@ const confirm = () => {
 function message (){
     alert("Le panier a été modifié");
 }
-//Fonction de la quantité total
-/*Pour la qt totale, il faut sélectionner l'ID dans html. Utilisation de parseInt pour convertir un argument
-en une chaîne de caractère. Calcul totalqt=totalqt+quantitysum. Envoie du calcul avec inner.text*/
-let totalquantity =0;
-function totalQuantities(quantity){
-    const elementQuantity = document.getElementById("#totalQuantity");
-    const quantitysum =  parseInt(product.quantiteStorage);
-    totalquantity +=quantitysum;
-    elementQuantity.innerText(totalquantity);
-}
-//Fonction du prix total
-/*Pour le prix total, il faut sélectionner l'ID dans html. Il faut réaliser le calcul de la qt*prix.
-Insérer le prix dans le total avec inner.text*/
-const elementPrice = document.getElementById("#totalPrice");
-function totalPrice(price){
-    let priceOfProduct = product.quantiteStorage * data.price;
-    price += priceOfProduct;
-    elementPrice.innerText(totalPrice);
-}
-
 //Modification des produits de la page panier
-/*Pour modifier la qt, il faut sélectionner le btn. Au clic, il doit y avoir un chgmnt de qt. Pas de redirection.
+/*Pour modifier la qt, il faut sélectionner input. Au clic, il doit y avoir un chgmnt de qt. Pas de redirection.
 La modification doit pouvoir se faire sur tous les pdts du LS. Utilisation d'une boucle. 
-Comme le pdt est dans le LS, il faut modifier le modifier*/
+Comme le pdt est dans le LS, il faut le modifier*/
 function modificationElement (modifications){
     //Sélection de la classe du code html
     const inputModification = document.querySelectorAll(".itemQuantity");
