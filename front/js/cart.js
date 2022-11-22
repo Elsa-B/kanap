@@ -112,51 +112,37 @@ function message (){
     alert("Le panier a été modifié");
 }
 //Modification des produits de la page panier
-/*Pour modifier la qt, il faut sélectionner input. Au clic, il doit y avoir un chgmnt de qt. Pas de redirection.
-La modification doit pouvoir se faire sur tous les pdts du LS. Utilisation d'une boucle. 
-Comme le pdt est dans le LS, il faut le modifier*/
+/*Pour modifier la qt, il faut sélectionner la class du code html. La modification doit pouvoir se faire sur tous les pdts du LS. Utilisation d'une boucle.
+Ecoute de la modification du panier. Pas de redirection. Comme le pdt est dans le LS, il faut le modifier*/
+const inputModification = document.querySelectorAll(".itemQuantity");
 function modificationElement (modifications){
-    //Sélection de la classe du code html
-    const inputModification = document.querySelectorAll(".itemQuantity");
-    //Boucle pour répéter l'action
     for(const quantityModification of modifications)
     //Au moment du changement des produits
-    inputModification.addEventListener("change",(m)=>{
+    inputModification.addEventListener("change",(event)=>{
         //Ne pas écouter l'évènement
-        m.preventDefault();
+        event.preventDefault();
         //Modification du localStorage
         localStorage.setItem("basket", JSON.stringify(productInBasket));
         message ();
     })
 }
 //Suppression des produits de la page panier
-/*Pour supprimer le pdt, il faut sélectionner le bouton. Le navigateur va écouter au clic la suppression
-du pdt. Le clic ne doit pas rediriger vers une page. Comme le pdt est dans le LS, il faut sélectionner l'ID et la couleur
-. Il faut ensuite filtrer et envoyer les nouvelles données au LS. Pour finir, message d'alerte*/
+/*Pour supprimer le pdt, sélection de la class dans le html. Ecoute de la fonction au clic. Pas de redirection.
+Sélection de la suppression. Filtration des éléments pour le modification. Modification dans le LS.
+Message de suppression*/
+const input = document.querySelector(".deleteItem");
 function deleteElement(inputDelete){
-    //Sélection de la classe du code html
-    const deleteItem = document.querySelector(".deleteItem");
-    //Boucle pour répéter l'action
-    for (const deleteProduct of inputDelete)
-    //Au clic de la souris sur le bouton
-    deleteItem.addEventListener("click",(d)=>{
-        //Ne pas écouter l'évènement
-        d.preventDefault();
-        //Sélection des suppressions
-        const selectionProduct = product.idStorage && product.couleurStorage;
-        //Filtration des éléments
-        const filterProduct = productInBasket.filter (el =>el.idStorage != el.selectionProduct);
-        //Modification du localStorage
-        localStorage.setItem("basket", JSON.stringify(productInBasket));
-        confirm();
+    inputDelete.addEventListener("click",(e)=>{
+        e.preventDefault();
+         
     })
+        
 }
 
 //Confirmation de la commande
-/*L'utilisateur rempli le form dans les champs. Si le champs est mal renseigné alors message d'alerte, sinon true.
-Utiliser des variables regex pour les différents champs. Sélectionner l'id de chaque champs à compléter.
-Lorsque le champs est correctement compléter, il faut envoyer le form et les pdts dans le LS. Utilisation
-d'une requête et créer un array de contact et de pdts. Prévoir un envoie vers la page confirmation*/
+/*Sélection de l'id du code html. Lors du remplissage du champs, si celui-ci est bon, alors innertext"", sinon, message d'erreur.
+Effectuer un test sur les champs de velidations.*/
+//Expressions 
 const regexText = /^[a-z][A-Z][éèàëêïöô]{1,20}$/;
 const regexAdress = /^[a-z][A-Z][éèàëêïöô]{1,50}$/;
 const regexMail = /"^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$"/;
@@ -166,4 +152,83 @@ const formContact = {
     address:document.getElementById("address").value,
     city:document.getElementById("city").value,
     mail:document.getElementById("email").value,
+}
+//Sélection des Regex
+let elementForm = document.querySelector(".cart__order__form");
+//Fonction de mise en place du formulaire
+function creationForm(){
+    inputFirstName();
+    inputName();
+    inputAddress();
+    inputCity();
+    inputMail();
+}
+//Validation du prénom
+function inputFirstName(){
+    let errorFirstName = inputFirstName.nextElementSibling;
+    if(regexText.test(inputFirstName.value)){
+        errorFirstName.innerText ="";
+    }else{
+        errorFirstName.innerText="Veuillez renseigner le champ";
+    }
+}
+//Validation du nom
+function inputName(){
+    let errorName = inputName.nextElementSibling;
+    if(regexText.test(inputName.value)){
+        errorName.innerText ="";
+    }else{
+        errorName.innerText="Veuillez renseigner le champ";
+    }
+}
+//Validation de l'adresse
+function inputAddress(){
+    let errorAddress = inputAddress.nextElementSibling;
+    if(regexAdress.test(inputAddress.value)){
+        errorAddress.innerText ="";
+    }else{
+        errorAddress.innerText="Veuillez renseigner le champ";
+    }
+}
+//Validation de la ville
+function inputCity(){
+    let errorCity = inputCity.nextElementSibling;
+    if(regexAdress.test(inputCity.value)){
+        errorCity.innerText ="";
+    }else{
+        errorCity.innerText="Veuillez renseigner la ville";
+    }
+}
+//Validation de l'e-mail
+function inputMail(){
+    let errorMail = inputMail.nextElementSibling;
+    if(regexMail.test(inputMail.value)){
+        errorMail.innerText ="";
+    }else{
+        errorMail.innerText="Veuillez renseigner le mail";
+    }
+}
+//Fonction d'envoie du formulaire
+function orderValidation(){
+    const elementOrder = document.getElementById("order");
+    elementOrder.addEventListener("click",(ev)=>{
+        ev.preventDefault();
+        formContact;
+        for(const formArray of productInBasket){
+            productInBasket.push(formArray.idStorage);
+        }
+        const sendForm = {
+            method:"POST",
+            body: JSON.stringify(formContact,formArray),
+            headers: {
+                "Accept": "application/json", 
+                "Content-Type": "application/json"
+            }
+        };
+        fetch("http://localhost:3000/api/products/order", sendForm)
+        .then(response=>response.json())
+        .then(data=>{
+            document.location.href="confirmation.html";
+        });
+    });
 }
