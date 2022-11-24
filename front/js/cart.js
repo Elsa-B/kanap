@@ -83,7 +83,9 @@ for(let product of productInBasket){
     incrementationTotalPrice(product.quantiteStorage,data.price); 
     }) 
     inputModification(); 
+   
 }
+orderValidation(productInBasket);
 /*Fonction et variables de la quantité total
 Pour la qt total, il faut sélectionner l'ID dans html. Utilisation de parseInt pour convertir un argument
 en une chaîne de caractère. Calcul totalqt=totalqt+quantitysum. Envoie du calcul avec inner.text*/
@@ -146,7 +148,7 @@ function deleteElement(inputDelete){
 /*Sélection de l'id du code html. Lors du remplissage du champs, si celui-ci est bon, alors innertext"", sinon, message d'erreur.
 Effectuer un test sur les champs de velidations.*/
 //Expressions 
-const regexText = /^[A-Z][A-Za-z\é\è\ê\-]+$/;
+const regexText = /^[A-Z][A-Za-z-]+$/;
 const regexAdress = /^[0-9]{1,5}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+/;
 const regexMail = /^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/;
 const formContact = {
@@ -215,7 +217,7 @@ function inputMail(){
 //Envoie du formulaire dans le localStorage
 function formValidation(){
     if(inputFirstName() && inputLastName() && inputAddress() && inputCity() && inputMail()){
-        localStorage.setItem("formContact",JSON.stringify(formContact));
+        localStorage.setItem("Contact",JSON.stringify(formContact));
         return true
     }else{
         alert("Veuillez renseigner tous les champs");
@@ -223,18 +225,15 @@ function formValidation(){
 }
 
 //Fonction d'envoie du formulaire
-function orderValidation(formContact){
+function orderValidation(productInBasket){
     const elementOrder = document.getElementById("order");
     elementOrder.addEventListener("click",(ev)=>{
         ev.preventDefault();
         formContact;
         formValidation();
-        for(const formArray of formContact){
-            productInBasket.push(formArray.idStorage);
-        }
         const sendForm = {
             method:"POST",
-            body: JSON.stringify(formContact,formArray),
+            body: JSON.stringify(formContact),
             headers: {
                 "Accept": "application/json", 
                 "Content-Type": "application/json"
@@ -243,9 +242,8 @@ function orderValidation(formContact){
         fetch("http://localhost:3000/api/products/order", sendForm)
         .then(response=>response.json())
         .then(data=>{
-            localStorage.setItem('orderId', data.orderId);
-            document.location.href = "confirmation.html?id="+ data.orderId;
+            localStorage.setItem('Contact', data.orderId);
+            document.location.href =`confirmation.html?id=${data.orderId}`;
         });
     });
 }
-orderValidation();
