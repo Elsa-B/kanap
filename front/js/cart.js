@@ -83,9 +83,8 @@ for(let product of productInBasket){
     incrementationTotalPrice(product.quantiteStorage,data.price); 
     }) 
     inputModification(); 
-   
 }
-orderValidation(productInBasket);
+
 /*Fonction et variables de la quantité total
 Pour la qt total, il faut sélectionner l'ID dans html. Utilisation de parseInt pour convertir un argument
 en une chaîne de caractère. Calcul totalqt=totalqt+quantitysum. Envoie du calcul avec inner.text*/
@@ -214,26 +213,27 @@ function inputMail(){
         return false;
     }
 }
-//Envoie du formulaire dans le localStorage
-function formValidation(){
-    if(inputFirstName() && inputLastName() && inputAddress() && inputCity() && inputMail()){
-        localStorage.setItem("Contact",JSON.stringify(formContact));
-        return true
-    }else{
-        alert("Veuillez renseigner tous les champs");
-    }
+//Fonctions du formulaire
+function allForm (){
+    inputFirstName();
+    inputLastName();
+    inputAddress();
+    inputCity();
+    inputMail();
 }
-
+allForm ();
 //Fonction d'envoie du formulaire
 function orderValidation(productInBasket){
     const elementOrder = document.getElementById("order");
     elementOrder.addEventListener("click",(ev)=>{
         ev.preventDefault();
         formContact;
-        formValidation();
+        for(let products of productInBasket){
+            products.push(productInBasket.idStorage);
+        }
         const sendForm = {
             method:"POST",
-            body: JSON.stringify(formContact),
+            body: JSON.stringify(formContact, products),
             headers: {
                 "Accept": "application/json", 
                 "Content-Type": "application/json"
@@ -247,3 +247,4 @@ function orderValidation(productInBasket){
         });
     });
 }
+orderValidation(productInBasket);
