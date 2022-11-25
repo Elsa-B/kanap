@@ -1,5 +1,3 @@
-const elementOrder = document.getElementById("orderId");
-function confirmation(){
-   elementOrder.innerText = localStorage.getItem("orderId")
-}
-confirmation();
+let newId = new URLSearchParams(window.location.search);
+const orderId = newId.get("id");
+document.getElementById("orderId").innerHTML += `${orderId}`;
