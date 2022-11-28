@@ -233,7 +233,6 @@ function validateForm(){
     if(inputFirstName() && inputLastName() && inputAddress() && inputCity() && inputMail()==false){
         alert("Veuillez renseigner les champs de saisie");
     }else{
-        localStorage.setItem("Contact",JSON.stringify(formContact));
         return true;
     }
 }
@@ -249,6 +248,9 @@ function orderValidation(){
         //Envoie du contact dans le LS
         validateForm();
         let products=[];
+        /*for(produtcs of productsInBasket){
+            products.push(productInBasket.idStorage);
+        }*/
         //Boucle pour récupérer les produits du LS
         for(let i=0; i<productInBasket.length; i++){
             products.push(productInBasket[i].idStorage);
