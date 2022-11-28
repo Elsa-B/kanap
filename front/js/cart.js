@@ -82,10 +82,8 @@ for(let product of productInBasket){
     //Utilisation de la fonction prix total
     incrementationTotalPrice(product.quantiteStorage,data.price); 
     })
-    inputModification();  
-
+    inputModification();
 }
-
 /*Fonction et variables de la quantité total
 Pour la qt total, il faut sélectionner l'ID dans html. Utilisation de parseInt pour convertir un argument
 en une chaîne de caractère. Calcul totalqt=totalqt+quantitysum. Envoie du calcul avec inner.text*/
@@ -131,20 +129,21 @@ function inputModification(){
     }
 };
 //Suppression des produits de la page panier
-/*Pour supprimer le pdt, sélection de la class dans le html. Ecoute de la fonction au clic. Pas de redirection.
-Sélection de la suppression. Filtration des éléments pour le modification. Modification dans le LS.
-Message de suppression*/
 const input = document.querySelector(".deleteItem");
 function deleteElement(){
+    //Au clic sur le bouton
     input.addEventListener("click",(e)=>{
     e.preventDefault();
-    let idDelete = productInBasket.deleteProduct.idStorage;
-    let colorDelete = productInBasket.deleteProduct.couleurStorage;
-    productInBasket = productInBasket.filter(elt => elt.idStorage !==idDelete || elt.couleurStorage !== colorDelete);
+    //Sélection du produit qui a été cliqué
+    //Remonter à l'élément que l'on veut
+    //Retirer le produit du panier
+    productInBasket = productInBasket.filter(elt => elt.idStorage !==articleElement.dataset.id || elt.couleurStorage !== articleElement.dataset.color);
+    console.log(productInBasket);
+    //Mise à jour du localStorage
     localStorage.setItem('basket',JSON.stringify(productInBasket));
     confirm()
     })
-}
+};
 
 //Confirmation de la commande
 //Expressions 
@@ -152,72 +151,53 @@ const regexText = /^[A-Z][A-Za-z-]+$/;
 const regexAdress = /^[0-9]{1,5}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+/;
 const regexMail = /^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/;
 //Variables
-const formContact = {
+let formContact = {
     firstName:document.getElementById("firstName").value,
     lastName:document.getElementById("lastName").value,
     address:document.getElementById("address").value,
     city:document.getElementById("city").value,
     mail:document.getElementById("email").value,
 }
-const testFirstName = formContact.firstName;
-let errorFirstName = document.getElementById("firstNameErrorMsg");
-const testLastName = formContact.lastName;
-let errorLastName = document.getElementById("lastNameErrorMsg");
-const testAddress = formContact.address;
-let errorAddress = document.getElementById("addressErrorMsg");
-const testCity = formContact.city;
-let errorCity = document.getElementById("cityErrorMsg");
-const testMail = formContact.mail;
-let errorMail = document.getElementById("emailErrorMsg");
 //Validation du prénom
 function inputFirstName(){ 
     //Si le test du regex est vrai, alors retourner vrai, sinon, message d'erreur et retourner faux
-    if(regexText.test(testFirstName)==true){
-        return true;
-    }else{
-        errorFirstName.innerText="Merci de renseigner le champ";
-        return false;
+    if(!regexText.test(formContact.firstName)){
+        document.getElementById("firstNameErrorMsg").innerText="Merci de renseigner le champ";
     }
+    return regexText.test(formContact.firstName);
 }
 //Validation du nom
 function inputLastName(){ 
     //Si le test du regex est vrai, alors retourner vrai, sinon, message d'erreur et retourner faux
-    if(regexText.test(testLastName)==true){
-        return true;
-    }else{
-        errorLastName.innerText="Merci de renseigner le champ";
-        return false;
+    if(!regexText.test(formContact.lastName)){
+        document.getElementById("lastNameErrorMsg").innerText="Merci de renseigner le champ";
     }
+    return regexText.test(formContact.lastName);
+
 }
 //Validation de l'adresse
 function inputAddress(){
     //Si le test du regex est vrai, alors retourner vrai, sinon, message d'erreur et retourner faux
-    if(regexAdress.test(testAddress)==true){
-        return true;
-    }else{
-        errorAddress.innerText="Merci de renseigner votre adresse";
-        return false;
+    if(!regexAdress.test(formContact.address)){
+        document.getElementById("addressErrorMsg").innerText="Merci de renseigner le champ";
     }
+    return regexText.test(formContact.address);
 }
 //Validation de la ville
 function inputCity(){
     //Si le test du regex est vrai, alors retourner vrai, sinon, message d'erreur et retourner faux
-    if(regexAdress.test(testCity)==true){
-        return true;
-    }else{
-        errorCity.innerText="Merci de renseigner le code postal et la ville";
-        return false;
+    if(!regexAdress.test(formContact.city)){
+        document.getElementById("cityErrorMsg").innerText="Merci de renseigner le champ";
     }
+    return regexText.test(formContact.city);
 }
 //Validation de l'e-mail
 function inputMail(){
     //Si le test du regex est vrai, alors retourner vrai, sinon, message d'erreur et retourner faux
-    if(regexMail.test(testMail)==true){
-        return true;
-    }else{
-        errorMail.innerText="Merci de renseigner votre mail";
-        return false;
+    if(!regexMail.test(formContact.mail)){
+        document.getElementById("emailErrorMsg").innerText="Merci de renseigner le champ";
     }
+    return regexText.test(formContact.mail);
 }
 //Fonctions du formulaire
 function allForm (){
@@ -232,46 +212,42 @@ allForm ();
 function validateForm(){
     if(inputFirstName() && inputLastName() && inputAddress() && inputCity() && inputMail()==false){
         alert("Veuillez renseigner les champs de saisie");
+        localStorage.setItem("contact", json.stringify(productInBasket))
     }else{
         return true;
     }
 }
 //Fonction d'envoie du formulaire
-function orderValidation(){
+
     const elementOrder = document.getElementById("order");
     //Ecoute de la variable elementOrder au clic de l'utilisateur
     elementOrder.addEventListener("click",(ev)=>{
         //Non-éxecution de l'évènement
         ev.preventDefault();
-        //Récupération du formulaire de contact
-        formContact;
-        //Envoie du contact dans le LS
-        validateForm();
         let products=[];
-        /*for(produtcs of productsInBasket){
-            products.push(productInBasket.idStorage);
-        }*/
         //Boucle pour récupérer les produits du LS
         for(let i=0; i<productInBasket.length; i++){
             products.push(productInBasket[i].idStorage);
         }
+        //Récupération du formulaire de contact
+        const ordered = {formContact, products,}
+        console.log(ordered);
         //Envoie du formulaire et les produits au serveur
         const sendForm = {
-            method:"POST",
-            body: JSON.stringify(formContact, products),
-            headers: {
-                "Accept": "application/json", 
-                "Content-Type": "application/json"
+            method:'POST',
+            body: JSON.stringify(ordered),
+            headers: { 
+                "Content-Type": 'application/json',
             }
         };
+        console.log(sendForm);
         //Fetch pour aller sur la page confirmation
-        fetch("http://localhost:3000/api/products/order", sendForm)
-        .then(response=>response.json())
+        fetch(`http://localhost:3000/api/products/order`, sendForm)
+        .then((response)=>response.json())
         .then(data=>{
-            localStorage.setItem('Contact', data.orderId);
+            console.log(data);
+            localStorage.setItem("orderId", data.orderId);
             document.location.href =`confirmation.html?id=${data.orderId}`;
-        })
+        });
         //.catch(localStorage.clear());
     });
-}
-orderValidation();
