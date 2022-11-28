@@ -81,8 +81,9 @@ for(let product of productInBasket){
     totalQuantities(product.quantiteStorage);
     //Utilisation de la fonction prix total
     incrementationTotalPrice(product.quantiteStorage,data.price); 
-    }) 
-    inputModification(); 
+    })
+    inputModification();  
+
 }
 
 /*Fonction et variables de la quantité total
@@ -123,8 +124,7 @@ function inputModification(){
         modification.addEventListener("change",(ev)=>{
             ev.preventDefault();
             let selectionModification = modification.closest("article");
-            let selectProductInBasket = productInBasket.find(element => element.idStorage==selectionModification.idStorage
-                && element.couleurStorage==selectionModification.couleurStorage);
+            let selectProductInBasket = productInBasket.find(element => element.idStorage==selectionModification.idStorage);
             localStorage.setItem("basket", JSON.stringify(selectProductInBasket));
             message();
         })
@@ -135,12 +135,15 @@ function inputModification(){
 Sélection de la suppression. Filtration des éléments pour le modification. Modification dans le LS.
 Message de suppression*/
 const input = document.querySelector(".deleteItem");
-function deleteElement(inputDelete){
-    inputDelete.addEventListener("click",(e)=>{
-        e.preventDefault();
-         
+function deleteElement(){
+    input.addEventListener("click",(e)=>{
+    e.preventDefault();
+    let idDelete = productInBasket.deleteProduct.idStorage;
+    let colorDelete = productInBasket.deleteProduct.couleurStorage;
+    productInBasket = productInBasket.filter(elt => elt.idStorage !==idDelete || elt.couleurStorage !== colorDelete);
+    localStorage.setItem('basket',JSON.stringify(productInBasket));
+    confirm()
     })
-        
 }
 
 //Confirmation de la commande
@@ -227,15 +230,15 @@ function allForm (){
 allForm ();
 //Fonction d'envoie du contact dans le localStorage
 function validateForm(){
-    if(inputFirstName() && inputLastName() && inputAddress() && inputCity() && inputMail()==true){
+    if(inputFirstName() && inputLastName() && inputAddress() && inputCity() && inputMail()==false){
+        alert("Veuillez renseigner les champs de saisie");
+    }else{
         localStorage.setItem("Contact",JSON.stringify(formContact));
         return true;
-    }else{
-        alert("Veuillez renseigner les champs de saisie");
     }
 }
 //Fonction d'envoie du formulaire
-function orderValidation(productInBasket){
+function orderValidation(){
     const elementOrder = document.getElementById("order");
     //Ecoute de la variable elementOrder au clic de l'utilisateur
     elementOrder.addEventListener("click",(ev)=>{
@@ -244,10 +247,11 @@ function orderValidation(productInBasket){
         //Récupération du formulaire de contact
         formContact;
         //Envoie du contact dans le LS
-        validateForm()
+        validateForm();
+        let products=[];
         //Boucle pour récupérer les produits du LS
-        for(let products of productInBasket){
-            products.push(productInBasket.idStorage);
+        for(let i=0; i<productInBasket.length; i++){
+            products.push(productInBasket[i].idStorage);
         }
         //Envoie du formulaire et les produits au serveur
         const sendForm = {
@@ -265,7 +269,7 @@ function orderValidation(productInBasket){
             localStorage.setItem('Contact', data.orderId);
             document.location.href =`confirmation.html?id=${data.orderId}`;
         })
-        .catch(localStorage.clear());
+        //.catch(localStorage.clear());
     });
 }
-orderValidation(productInBasket);
+orderValidation();
