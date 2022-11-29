@@ -151,53 +151,53 @@ const regexText = /^[A-Z][A-Za-z-]+$/;
 const regexAdress = /^[0-9]{1,5}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+/;
 const regexMail = /^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/;
 //Variables
-let formContact = {
+let contact = {
     firstName:document.getElementById("firstName").value,
     lastName:document.getElementById("lastName").value,
     address:document.getElementById("address").value,
     city:document.getElementById("city").value,
-    mail:document.getElementById("email").value,
+    email:document.getElementById("email").value,
 }
 //Validation du prénom
 function inputFirstName(){ 
     //Si le test du regex est vrai, alors retourner vrai, sinon, message d'erreur et retourner faux
-    if(!regexText.test(formContact.firstName)){
+    if(!regexText.test(contact.firstName)){
         document.getElementById("firstNameErrorMsg").innerText="Merci de renseigner le champ";
     }
-    return regexText.test(formContact.firstName);
+    return regexText.test(contact.firstName);
 }
 //Validation du nom
 function inputLastName(){ 
     //Si le test du regex est vrai, alors retourner vrai, sinon, message d'erreur et retourner faux
-    if(!regexText.test(formContact.lastName)){
+    if(!regexText.test(contact.lastName)){
         document.getElementById("lastNameErrorMsg").innerText="Merci de renseigner le champ";
     }
-    return regexText.test(formContact.lastName);
+    return regexText.test(contact.lastName);
 
 }
 //Validation de l'adresse
 function inputAddress(){
     //Si le test du regex est vrai, alors retourner vrai, sinon, message d'erreur et retourner faux
-    if(!regexAdress.test(formContact.address)){
+    if(!regexAdress.test(contact.address)){
         document.getElementById("addressErrorMsg").innerText="Merci de renseigner le champ";
     }
-    return regexText.test(formContact.address);
+    return regexText.test(contact.address);
 }
 //Validation de la ville
 function inputCity(){
     //Si le test du regex est vrai, alors retourner vrai, sinon, message d'erreur et retourner faux
-    if(!regexAdress.test(formContact.city)){
+    if(!regexAdress.test(contact.city)){
         document.getElementById("cityErrorMsg").innerText="Merci de renseigner le champ";
     }
-    return regexText.test(formContact.city);
+    return regexText.test(contact.city);
 }
 //Validation de l'e-mail
 function inputMail(){
     //Si le test du regex est vrai, alors retourner vrai, sinon, message d'erreur et retourner faux
-    if(!regexMail.test(formContact.mail)){
+    if(!regexMail.test(contact.email)){
         document.getElementById("emailErrorMsg").innerText="Merci de renseigner le champ";
     }
-    return regexText.test(formContact.mail);
+    return regexText.test(contact.email);
 }
 //Fonctions du formulaire
 function allForm (){
@@ -230,24 +230,25 @@ function validateForm(){
             products.push(productInBasket[i].idStorage);
         }
         //Récupération du formulaire de contact
-        const ordered = {formContact, products,}
+        const ordered = {contact, products,}
         console.log(ordered);
         //Envoie du formulaire et les produits au serveur
-        const sendForm = {
+        const options = {
             method:'POST',
             body: JSON.stringify(ordered),
             headers: { 
                 "Content-Type": 'application/json',
             }
         };
-        console.log(sendForm);
+        console.log(options);
         //Fetch pour aller sur la page confirmation
-        fetch(`http://localhost:3000/api/products/order`, sendForm)
+        fetch(`http://localhost:3000/api/products/order`, options)
         .then((response)=>response.json())
-        .then(data=>{
-            console.log(data);
+        .then((data)=>{
+            
             localStorage.setItem("orderId", data.orderId);
-            document.location.href =`confirmation.html?id=${data.orderId}`;
+            document.location.href =`confirmation.html?orderId=`+ data.orderId;
+            console.log(data);
         });
         //.catch(localStorage.clear());
     });
