@@ -1,6 +1,4 @@
 let productInBasket = JSON.parse(localStorage.getItem("basket"));
-
-
 //Boucle permettant d'afficher tous les produits du localStorage
 for(let product of productInBasket){
     //Appel de l'api pour récupération des éléments
@@ -104,13 +102,6 @@ function incrementationTotalPrice(qty,price){
     totalPrice += priceOfProduct;
     elementPrice.innerText = totalPrice;
 }
-//Fonctions de messages
-const confirm = () => {
-    alert ("Le produit a été supprimé");
-};
-function message (){
-    alert("Le panier a été modifié");
-}
 //Modification des produits de la page panier
 /*Pour modifier la qt, il faut sélectionner la class du code html. La modif doit pouvoir se faire sur chaque pdt.
 Pour modifier la qt, il faut écouter l'évènement, qui est un chgmt. Il ne doit pas y avoir de renvoie vers une page.
@@ -124,7 +115,6 @@ function inputModification(){
             let selectionModification = modification.closest("article");
             let selectProductInBasket = productInBasket.find(element => element.idStorage==selectionModification.idStorage);
             localStorage.setItem("basket", JSON.stringify(selectProductInBasket));
-            message();
         })
     }
 };
@@ -141,13 +131,11 @@ function deleteElement(){
     console.log(productInBasket);
     //Mise à jour du localStorage
     localStorage.setItem('basket',JSON.stringify(productInBasket));
-    confirm()
     })
 };
-
-//Confirmation de la commande
+//                                             Confirmation de la commande
 //Expressions 
-const regexText = /^[A-Z][A-Za-z-]+$/;
+const regexText = /^[A-Za-zàâäéèêëïîôöùûüç]+$/;
 const regexAdress = /^[0-9]{1,5}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+/;
 const regexMail = /^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/;
 //Variables
@@ -160,44 +148,44 @@ let contact = {
 }
 //Validation du prénom
 function inputFirstName(){ 
-    //Si le test du regex est vrai, alors retourner vrai, sinon, message d'erreur et retourner faux
+    //Si le test du regex est différent, alors message d'erreur
     if(!regexText.test(contact.firstName)){
-        document.getElementById("firstNameErrorMsg").innerText="Merci de renseigner le champ";
+        document.getElementById("firstNameErrorMsg").innerText="Merci de renseigner votre prénom";
     }
     return regexText.test(contact.firstName);
 }
 //Validation du nom
 function inputLastName(){ 
-    //Si le test du regex est vrai, alors retourner vrai, sinon, message d'erreur et retourner faux
+    //Si le test du regex est différent, alors message d'erreur
     if(!regexText.test(contact.lastName)){
-        document.getElementById("lastNameErrorMsg").innerText="Merci de renseigner le champ";
+        document.getElementById("lastNameErrorMsg").innerText="Merci de renseigner votre nom";
     }
     return regexText.test(contact.lastName);
 
 }
 //Validation de l'adresse
 function inputAddress(){
-    //Si le test du regex est vrai, alors retourner vrai, sinon, message d'erreur et retourner faux
+    //Si le test du regex est différent, alors message d'erreur
     if(!regexAdress.test(contact.address)){
-        document.getElementById("addressErrorMsg").innerText="Merci de renseigner le champ";
+        document.getElementById("addressErrorMsg").innerText="Merci de renseigner le numéro de voie et la rue";
     }
-    return regexText.test(contact.address);
+    return regexAdress.test(contact.address);
 }
 //Validation de la ville
 function inputCity(){
-    //Si le test du regex est vrai, alors retourner vrai, sinon, message d'erreur et retourner faux
+    //Si le test du regex est différent, alors message d'erreur
     if(!regexAdress.test(contact.city)){
-        document.getElementById("cityErrorMsg").innerText="Merci de renseigner le champ";
+        document.getElementById("cityErrorMsg").innerText="Merci de renseigner le code postal et la ville";
     }
-    return regexText.test(contact.city);
+    return regexAdress.test(contact.city);
 }
 //Validation de l'e-mail
 function inputMail(){
-    //Si le test du regex est vrai, alors retourner vrai, sinon, message d'erreur et retourner faux
+    //Si le test du regex est différent, alors message d'erreur
     if(!regexMail.test(contact.email)){
-        document.getElementById("emailErrorMsg").innerText="Merci de renseigner le champ";
+        document.getElementById("emailErrorMsg").innerText="Exemple : devinci@paint.table";
     }
-    return regexText.test(contact.email);
+    return regexMail.test(contact.email);
 }
 //Fonctions du formulaire
 function allForm (){
@@ -208,47 +196,47 @@ function allForm (){
     inputMail();
 }
 allForm ();
-//Fonction d'envoie du contact dans le localStorage
-function validateForm(){
-    if(inputFirstName() && inputLastName() && inputAddress() && inputCity() && inputMail()==false){
-        alert("Veuillez renseigner les champs de saisie");
-        localStorage.setItem("contact", json.stringify(productInBasket))
-    }else{
-        return true;
-    }
-}
 //Fonction d'envoie du formulaire
-
+function formOrder(){
     const elementOrder = document.getElementById("order");
     //Ecoute de la variable elementOrder au clic de l'utilisateur
     elementOrder.addEventListener("click",(ev)=>{
-        //Non-éxecution de l'évènement
-        ev.preventDefault();
-        let products=[];
-        //Boucle pour récupérer les produits du LS
-        for(let i=0; i<productInBasket.length; i++){
-            products.push(productInBasket[i].idStorage);
+        //Si l'un des champs est vide alors message d'alerte, pas de renvoie vers la page confirmation
+        if(!contact.firstName || !contact.lastName || !contact.address || !contact.city || !contact.email){
+            alert("Merci de renseigner les champs vides");
+            ev.preventDefault();
+            //Sinon, si l'un des champs est faux, alors message d'erreur, pas de renvoie vers la page confirmation
+        }else if(!inputFirstName()||!inputLastName()||!inputAddress()||!inputCity()||!inputMail()){
+            alert("Merci de vérifier les champs de saisie")
+            ev.preventDefault();
         }
-        //Récupération du formulaire de contact
-        const ordered = {contact, products,}
-        console.log(ordered);
-        //Envoie du formulaire et les produits au serveur
-        const options = {
-            method:'POST',
-            body: JSON.stringify(ordered),
-            headers: { 
-                "Content-Type": 'application/json',
+        else{//Sinon, non-éxecution de l'évènement
+            ev.preventDefault();
+            //Boucle pour récupérer les produits du LS
+            let products=[];
+            for(let i=0; i<productInBasket.length; i++){
+                products.push(productInBasket[i].idStorage);
             }
+            //Récupération du formulaire de contact et le tableau de produits
+            const ordered = {contact, products,}
+            //Variable envoie du formulaire et les produits au serveur
+            const options = {
+                method:'POST',
+                body: JSON.stringify(ordered),
+                headers: { 
+                    "Content-Type": 'application/json',
+                }
+            };
+            //Envoie du formulaire et des produits à l'api
+            fetch(`http://localhost:3000/api/products/order`, options)
+            .then((response)=>response.json())
+            .then((data)=>{
+                //localStorage.clear();
+                localStorage.setItem("orderId", data.orderId);
+                //Redirection vers la page confirmation avec l'id du numéro de commande
+                document.location.href =`confirmation.html?orderId=`+ data.orderId;
+            });
         };
-        console.log(options);
-        //Fetch pour aller sur la page confirmation
-        fetch(`http://localhost:3000/api/products/order`, options)
-        .then((response)=>response.json())
-        .then((data)=>{
-            
-            localStorage.setItem("orderId", data.orderId);
-            document.location.href =`confirmation.html?orderId=`+ data.orderId;
-            console.log(data);
-        });
-        //.catch(localStorage.clear());
     });
+};
+formOrder();
