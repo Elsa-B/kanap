@@ -82,7 +82,6 @@ for(let product of productInBasket){
     deleteElement();
     })
     inputModification();
-    
 }
 /*Fonction et variables de la quantité total
 Pour la qt total, il faut sélectionner l'ID dans html. Utilisation de parseInt pour convertir un argument
@@ -122,26 +121,29 @@ function inputModification(){
 };
 //Suppression des produits de la page panier
 function deleteElement(){
-    let inputDelete = document.querySelectorAll(".deleteItem");
-    inputDelete.forEach((inputDelete)=>{
-        //Au clic sur le bouton
-        inputDelete.addEventListener("click",(e)=>{
-        e.preventDefault();
-        //Remonter à l'élément que l'on veut
-        let elementArticle = inputDelete.closest('article');
-        console.log(elementArticle);
-        //Filtre des éléments du panier, pour garder ceux qui ne sont pas supprimé
-        productInBasket = productInBasket.filter(elt => elt.idStorage !==elementArticle.dataset.id || elt.couleurStorage !== elementArticle.dataset.color);
-        console.log(  productInBasket = productInBasket.filter(elt => elt.idStorage ==elementArticle.dataset.id || elt.couleurStorage == elementArticle.dataset.color));
-        //Mise à jour du localStorage
-        localStorage.setItem('basket',JSON.stringify(productInBasket));
-        //Supprime le pdt du html
-        elementArticle.parentNode.removeChild(elementArticle);
-        alert("Le produit a été supprimé")
-        location.reload();
-        });
-    })
+    let inputDelete = document.querySelector(".deleteItem");
+    //Au clic sur le bouton
+    inputDelete.addEventListener("click",(e)=>{
+    e.preventDefault();
+    //Cibler le pdt qui a été cliqué
+    e.target;
+    console.log(e.target);
+    //Remonter à l'élément que l'on veut
+    let elementArticle = inputDelete.closest('article');
+    console.log(elementArticle);
+    //Filtre des éléments du panier, pour garder ceux qui ne sont pas supprimé
+    const searchDeleteItem = productInBasket.find(element => element.id == elementArticle.dataset.id && element.couleur == elementArticle.dataset.color);
+    console.log(searchDeleteItem);
+    productInBasket = productInBasket.filter(elt => elt !==searchDeleteItem);
+    console.log(productInBasket = productInBasket.filter(elt => elt !==searchDeleteItem));
+    /*//Mise à jour du localStorage
+    localStorage.setItem('basket',JSON.stringify(productInBasket));
+    console.log(localStorage.setItem('basket',JSON.stringify(productInBasket)));
+    //Supprime le pdt du html
     
+    alert("Le produit a été supprimé")
+    location.reload();*/
+    });
 };
 //                                             Confirmation de la commande
 //Expressions 
