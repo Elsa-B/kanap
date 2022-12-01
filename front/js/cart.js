@@ -78,9 +78,11 @@ for(let product of productInBasket){
     //Utilisation de la fonction quantité total
     totalQuantities(product.quantiteStorage);
     //Utilisation de la fonction prix total
-    incrementationTotalPrice(product.quantiteStorage,data.price); 
+    incrementationTotalPrice(product.quantiteStorage,data.price);
+    deleteElement();
     })
     inputModification();
+    
 }
 /*Fonction et variables de la quantité total
 Pour la qt total, il faut sélectionner l'ID dans html. Utilisation de parseInt pour convertir un argument
@@ -119,19 +121,27 @@ function inputModification(){
     }
 };
 //Suppression des produits de la page panier
-const input = document.querySelector(".deleteItem");
 function deleteElement(){
-    //Au clic sur le bouton
-    input.addEventListener("click",(e)=>{
-    e.preventDefault();
-    //Sélection du produit qui a été cliqué
-    //Remonter à l'élément que l'on veut
-    //Retirer le produit du panier
-    productInBasket = productInBasket.filter(elt => elt.idStorage !==articleElement.dataset.id || elt.couleurStorage !== articleElement.dataset.color);
-    console.log(productInBasket);
-    //Mise à jour du localStorage
-    localStorage.setItem('basket',JSON.stringify(productInBasket));
+    let inputDelete = document.querySelectorAll(".deleteItem");
+    inputDelete.forEach((inputDelete)=>{
+        //Au clic sur le bouton
+        inputDelete.addEventListener("click",(e)=>{
+        e.preventDefault();
+        //Remonter à l'élément que l'on veut
+        let elementArticle = inputDelete.closest('article');
+        console.log(elementArticle);
+        //Filtre des éléments du panier, pour garder ceux qui ne sont pas supprimé
+        productInBasket = productInBasket.filter(elt => elt.idStorage !==elementArticle.dataset.id || elt.couleurStorage !== elementArticle.dataset.color);
+        console.log(  productInBasket = productInBasket.filter(elt => elt.idStorage ==elementArticle.dataset.id || elt.couleurStorage == elementArticle.dataset.color));
+        //Mise à jour du localStorage
+        localStorage.setItem('basket',JSON.stringify(productInBasket));
+        //Supprime le pdt du html
+        elementArticle.parentNode.removeChild(elementArticle);
+        alert("Le produit a été supprimé")
+        location.reload();
+        });
     })
+    
 };
 //                                             Confirmation de la commande
 //Expressions 
