@@ -9,7 +9,6 @@ const urlParams = new URLSearchParams(newUrl);
 const id = urlParams.get('id');
 const urlProduct = `http://localhost:3000/api/products/${id}`;
 
-
 /*                 Stockage des variables d'affichage produit
 Variable de l'image*/
 const image = document.querySelector(".item__img");
@@ -26,7 +25,6 @@ const color = document.getElementById("colors");
 const choiceQuantite = document.getElementById("quantity");
 //Variable du bouton "Ajouter au panier"
 const check = document.getElementById("addToCart");
-
 
 //Je fais appel à fetch pour l'URL de la page produit
 fetch (urlProduct)
@@ -72,9 +70,9 @@ const confirm = () => {
 
 
 /*                 Ajout des produits dans le panier
-
 Récupération de la sélection de l'utilisateur et envoie dans le panier.
 Ecoute de la variable "check" au moment du clic de l'utilisateur*/
+function sendInBasket(){
 check.addEventListener("click",(e)=>{
     //Demande de non-exécution de l'évenement
     e.preventDefault();
@@ -92,7 +90,6 @@ check.addEventListener("click",(e)=>{
         //Conversion des données du format javaScript au format JSON
         localStorage.setItem("basket", JSON.stringify(productInBasket)); 
     }
-    
     /*Utilisation des conditions
     Si on ajoute un produit au panier*/
     if(productInBasket){
@@ -119,3 +116,5 @@ check.addEventListener("click",(e)=>{
         confirm();
     }
 });
+};
+ sendInBasket();

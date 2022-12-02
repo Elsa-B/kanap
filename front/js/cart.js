@@ -212,8 +212,12 @@ function formOrder(){
     const elementOrder = document.getElementById("order");
     //Ecoute de la variable elementOrder au clic de l'utilisateur
     elementOrder.addEventListener("click",(ev)=>{
+        if(productInBasket.length===0 || productInBasket===null){
+            alert("Votre panier est vide");
+            ev.preventDefault();
+        }
         //Si l'un des champs est vide alors message d'alerte, pas de renvoie vers la page confirmation
-        if(!contact.firstName || !contact.lastName || !contact.address || !contact.city || !contact.email){
+        else if(!contact.firstName || !contact.lastName || !contact.address || !contact.city || !contact.email){
             alert("Merci de renseigner les champs vides");
             ev.preventDefault();
             //Sinon, si l'un des champs est faux, alors message d'erreur, pas de renvoie vers la page confirmation
