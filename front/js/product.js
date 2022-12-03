@@ -1,5 +1,4 @@
 //                Lien entre la page d'accueil et les produits
-
 /*Mise en place d'une nouvelle URL.
 Utilisation de window pour récupérer la page courante*/
 const newUrl = window.location.search;
@@ -68,53 +67,56 @@ const confirm = () => {
     alert ("Le produit a été ajouté au panier");
 };
 
-
 /*                 Ajout des produits dans le panier
 Récupération de la sélection de l'utilisateur et envoie dans le panier.
 Ecoute de la variable "check" au moment du clic de l'utilisateur*/
 function sendInBasket(){
-check.addEventListener("click",(e)=>{
-    //Demande de non-exécution de l'évenement
-    e.preventDefault();
-    //Récupération de la sélection utilisateur avec l'ID, la quantité et la couleur
-    const choiceProduct =  {
-        idStorage:id,
-        quantiteStorage:choiceQuantite.value,
-        couleurStorage:color.value,
-    };
-    console.log(choiceProduct);
-    //Variables de stockage
-    let eltLocalStorage= () =>{
-        //Ajout des éléments dans le tableau avec push
-        productInBasket.push(choiceProduct);
-        //Conversion des données du format javaScript au format JSON
-        localStorage.setItem("basket", JSON.stringify(productInBasket)); 
-    }
-    /*Utilisation des conditions
-    Si on ajoute un produit au panier*/
-    if(productInBasket){
-        // Utilisation de find qui renvoie la première valeur d'un élément dans un array
-        const productOrdered = productInBasket.find(element => element.idStorage === id && element.couleurStorage === color.value)
-        //Si celui-ci existe déjà dans l'array
-        if(productOrdered){
-            //Calcul pour ajouter les quantités dans l'array
-            let newQuantity = parseInt(choiceProduct.quantiteStorage) + parseInt(productOrdered.quantiteStorage);
-            productOrdered.quantiteStorage = newQuantity;
-            localStorage.setItem("basket", JSON.stringify(productInBasket));
-            confirm();
-        //Sinon, s'il n'y en a pas ajout d'une ligne
-        }else{
+    check.addEventListener("click",(e)=>{
+        //Demande de non-exécution de l'évenement
+        e.preventDefault();
+        //Récupération de la sélection utilisateur avec l'ID, la quantité et la couleur
+        const choiceProduct =  {
+            idStorage:id,
+            quantiteStorage:choiceQuantite.value,
+            couleurStorage:color.value,
+        };
+        console.log(choiceProduct);
+        //Variables de stockage
+        let eltLocalStorage= () =>{
+            //Ajout des éléments dans le tableau avec push
+            productInBasket.push(choiceProduct);
+            //Conversion des données du format javaScript au format JSON
+            localStorage.setItem("basket", JSON.stringify(productInBasket)); 
+        }
+        /*Utilisation des conditions
+        Si on ajoute un produit au panier*/
+        if(productInBasket){
+            // Utilisation de find qui renvoie la première valeur d'un élément dans un array
+            const productOrdered = productInBasket.find(element => element.idStorage === id && element.couleurStorage === color.value)
+            //Si, la couleur =null ou =0 ou la quantité est <=0 ou >100, message d'alerte
+            if(choiceProduct.couleurStorage===null || choiceProduct.couleurStorage===0 || choiceProduct.quantiteStorage<=0 || choiceProduct.quantiteStorage>100){
+                alert("Veuillez choisir une couleur ou une quantité")
+            }
+            //Sinon si, celui-ci existe déjà dans l'array
+            else if(productOrdered){
+                //Calcul pour ajouter les quantités dans l'array
+                let newQuantity = parseInt(choiceProduct.quantiteStorage) + parseInt(productOrdered.quantiteStorage);
+                productOrdered.quantiteStorage = newQuantity;
+                localStorage.setItem("basket", JSON.stringify(productInBasket));
+                confirm();
+            //Sinon, s'il n'y en a pas ajout d'une ligne
+            }else{
+                eltLocalStorage();
+                confirm();
+            }
+        }
+        //S'il n'y a aucun produit dans le localStorage
+        else{
+            //Création d'un tableau
+            productInBasket = [];
             eltLocalStorage();
             confirm();
         }
-    }
-    //S'il n'y a aucun produit dans le localStorage
-    else{
-        //Création d'un tableau
-        productInBasket = [];
-        eltLocalStorage();
-        confirm();
-    }
-});
+    });
 };
- sendInBasket();
+sendInBasket();
