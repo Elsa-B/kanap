@@ -90,33 +90,32 @@ function sendInBasket(){
         }
         /*Utilisation des conditions
         Si on ajoute un produit au panier*/
-        if(productInBasket){
-            // Utilisation de find qui renvoie la première valeur d'un élément dans un array
-            const productOrdered = productInBasket.find(element => element.idStorage === id && element.couleurStorage === color.value)
-            //Si, la couleur =null ou =0 ou la quantité est <=0 ou >100, message d'alerte
-            if(choiceProduct.couleurStorage===null || choiceProduct.couleurStorage===0 || choiceProduct.quantiteStorage<=0 || choiceProduct.quantiteStorage>100){
-                alert("Veuillez choisir une couleur ou une quantité")
+        //Si, la couleur =null ou =0 ou la quantité est <=0 ou >100, message d'alerte
+        if(choiceProduct.couleurStorage !== "" && choiceProduct.quantiteStorage > 0 && choiceProduct.quantiteStorage <= 100){
+            if(productInBasket){
+                // Utilisation de find qui renvoie la première valeur d'un élément dans un array
+                const productOrdered = productInBasket.find(element => element.idStorage === id && element.couleurStorage === color.value)
+                //Si, celui-ci existe déjà dans l'array
+                if(productOrdered){
+                    //Calcul pour ajouter les quantités dans l'array
+                    let newQuantity = parseInt(choiceProduct.quantiteStorage) + parseInt(productOrdered.quantiteStorage);
+                    productOrdered.quantiteStorage = newQuantity;
+                    localStorage.setItem("basket", JSON.stringify(productInBasket));
+                    confirm();
+                //Sinon, s'il n'y en a pas ajout d'une ligne
+                }else{
+                    eltLocalStorage();
+                    confirm();
+                }
             }
-            //Sinon si, celui-ci existe déjà dans l'array
-            else if(productOrdered){
-                //Calcul pour ajouter les quantités dans l'array
-                let newQuantity = parseInt(choiceProduct.quantiteStorage) + parseInt(productOrdered.quantiteStorage);
-                productOrdered.quantiteStorage = newQuantity;
-                localStorage.setItem("basket", JSON.stringify(productInBasket));
-                confirm();
-            //Sinon, s'il n'y en a pas ajout d'une ligne
-            }else{
+            //S'il n'y a aucun produit dans le localStorage
+            else{
+                //Création d'un tableau
+                productInBasket = [];
                 eltLocalStorage();
                 confirm();
             }
-        }
-        //S'il n'y a aucun produit dans le localStorage
-        else{
-            //Création d'un tableau
-            productInBasket = [];
-            eltLocalStorage();
-            confirm();
-        }
+        }else{alert("Veuillez choisir une couleur ou saisir une quantité")}
     });
 };
 sendInBasket();
