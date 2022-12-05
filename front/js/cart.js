@@ -1,16 +1,15 @@
 let productInBasket = JSON.parse(localStorage.getItem("basket"));
+/*Fonction permettant d'afficher tous les produits du localStorage
+Pour chaque produit, appel de l'api pour récupération des éléments. Retour de la première promesse en json. Deuxième promesse permettant l'affichage des informations des produit. Insertion
+des éléments. Utilisation des fonctions quantité total, prix total, modification et suppression*/
 function displayProductInBasket(productInBasket){
-    //Boucle permettant d'afficher tous les produits du localStorage
     for(let product of productInBasket){
-        //Appel de l'api pour récupération des éléments
         fetch (`http://localhost:3000/api/products/${product.idStorage}`)
-        //Retour de la première promesse en json
         .then((res) => {
             if(res.ok){
                 return res.json();
             }
         })
-        //Deuxième promesse permettant l'affichage des informations des produits
         .then (data =>{
         const section = document.querySelector("#cart__items");
         //Insertion de l'article
@@ -78,89 +77,75 @@ function displayProductInBasket(productInBasket){
         settingsDelete.appendChild(deleteInput);
         deleteInput.className = "deleteItem";
         deleteInput.innerText = "Supprimer";
-        //Utilisation des fonctions quantité total, prix total, modification et suppression
         totalQuantities(product.quantiteStorage);
         incrementationTotalPrice(product.quantiteStorage,data.price);
-        deleteElement();
         inputModification();
+        deleteElement();
         });
     };
 };
 displayProductInBasket(productInBasket);
 /*Fonction et variables de la quantité total
-Sélection de l'ID dans html. Utilisation de parseInt pour convertir un argument
-en une chaîne de caractère. Calcul totalqt=totalqt+quantitysum. Envoie du calcul avec inner.text*/
+Sélection de l'ID dans html. Utilisation de parseInt pour convertir un argument en une chaîne de caractère. Calcul totalqt=totalqt+quantitysum. Envoie du calcul avec inner.text*/
 const elementQuantity = document.getElementById("totalQuantity");
 let totalquantity =0;
 function totalQuantities(quantity){
     const quantitysum =  parseInt(quantity);
     totalquantity +=quantitysum;
     elementQuantity.innerText = totalquantity;
-}
+};
 /*Fonction et varirables du prix total
-Sélection de l'ID dans html. Il faut réaliser le calcul de la qt*prix. Ensuite calcul 
-totalPrice=tatalPrice*priceOfProduct. Insérer le prix dans le total avec inner.text*/
+Sélection de l'ID dans html. Il faut réaliser le calcul de la qt*prix. Ensuite calcul totalPrice=tatalPrice*priceOfProduct. Insérer le prix dans le total avec inner.text*/
 let elementPrice = document.getElementById("totalPrice");
 let totalPrice = 0;
 function incrementationTotalPrice(qty,price){
     let priceOfProduct = qty * price;
     totalPrice += priceOfProduct;
     elementPrice.innerText = totalPrice;
-}
-//Modification des produits de la page panier
+};
+/*Modification des produits de la page panier
+Sélection de l'élément HTML. Au moment du changement de qt, ciblage du pdt qui a été modifié. Ensuite, il faut remonter à l'élément que l'on veut. Comparaison entre les produits du LS.
+Puis mise à jour du LS, message d'alerte, mise à jour des totaux*/
 function inputModification(){
     const elementModification = document.querySelectorAll(".itemQuantity");
     for(const modification of elementModification){
-        //Au moment du changement de qt
         modification.addEventListener("change",(ev)=>{
             ev.preventDefault();
-            //Cibler le pdt qui a été mofifié
             ev.target;
-            //Remonter à l'élément que l'on veut
             let selectionModification = modification.closest("article");
             let selectModif = productInBasket.find(element => element.idStorage==selectionModification.dataset.id && element.couleurStorage === selectionModification.dataset.color);
             selectModif.quantiteStorage=modification.value;
             selectModif=productInBasket;
-            //Mise à jour du localStorage+Mesage d'alerte + Mise à jour des totaux
             localStorage.setItem("basket", JSON.stringify(productInBasket));
             alert("Le produit a été modifié");
             location.reload();
         });
     };
 };
-//Suppression des produits de la page panier
+/*Suppression des produits de la page panier
+Au moment du clic sur le bouton, ciblage du pdt. Remonter à l'élément que l'on veut. Comparaison des pdts présents dans le LS. Filtre des éléments du panier, pour garder ceux qui
+ne sont pas supprimé. Mise à jour du localStorage. Suppression du pdt du html, message d'alerte, mise à jour des totaux*/
 function deleteElement(){
     let inputDelete = document.querySelectorAll(".deleteItem");
     for(const deletion of inputDelete){
-        //Au clic sur le bouton
         deletion.addEventListener("click",(e)=>{
         e.preventDefault();
-        //Cibler le pdt qui a été cliqué
         e.target;
-        console.log(e.target);
-        //Remonter à l'élément que l'on veut
         let elementArticle = deletion.closest('article');
-        console.log(elementArticle);
-        //Filtre des éléments du panier, pour garder ceux qui ne sont pas supprimé
         const searchDeleteItem = productInBasket.find(element => element.idStorage == elementArticle.dataset.id && element.couleurStorage == elementArticle.dataset.color);
-        console.log(searchDeleteItem);
         productInBasket = productInBasket.filter(elt => elt !==searchDeleteItem);
-        console.log(productInBasket = productInBasket.filter(elt => elt !==searchDeleteItem));
-        //Mise à jour du localStorage
         localStorage.setItem('basket',JSON.stringify(productInBasket));
-        //Supprime le pdt du html+Message d'alerte+Mise à jour des totaux
         elementArticle.remove();
         alert("Le produit a été supprimé")
         location.reload();
         });
-    }
+    };
 };
 //                                     Confirmation de la commande
 //Expressions 
 const regexText = /^[A-Za-zàâäéèêëïîôöùûüç]+$/;
 const regexAdress = /^[0-9]{1,5}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+/;
 const regexMail = /^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/;
-//Variables
 let contact = {
     firstName:document.getElementById("firstName").value,
     lastName:document.getElementById("lastName").value,
@@ -168,39 +153,35 @@ let contact = {
     city:document.getElementById("city").value,
     email:document.getElementById("email").value,
 }
-//Validation du prénom
+/*Fonctions du formulaire
+Si le test du regex est différent de ce que l'on attend, alors message d'erreur. Fin de l'exécution de la fonction et renvoie la bonne valeur attendue*/
 function inputFirstName(){ 
-    //Si le test du regex est différent, alors message d'erreur
     if(!regexText.test(contact.firstName)){
         document.getElementById("firstNameErrorMsg").innerText="Merci de renseigner votre prénom";
     }return regexText.test(contact.firstName);
 };
-//Validation du nom
 function inputLastName(){ 
     if(!regexText.test(contact.lastName)){
         document.getElementById("lastNameErrorMsg").innerText="Merci de renseigner votre nom";
     }return regexText.test(contact.lastName);
 
 };
-//Validation de l'adresse
 function inputAddress(){
     if(!regexAdress.test(contact.address)){
         document.getElementById("addressErrorMsg").innerText="Merci de renseigner le numéro de voie et la rue";
     }return regexAdress.test(contact.address);
 };
-//Validation de la ville
 function inputCity(){
     if(!regexAdress.test(contact.city)){
         document.getElementById("cityErrorMsg").innerText="Merci de renseigner le code postal et la ville";
     }return regexAdress.test(contact.city);
 };
-//Validation de l'e-mail
 function inputMail(){
     if(!regexMail.test(contact.email)){
         document.getElementById("emailErrorMsg").innerText="Exemple : devinci@paint.table";
     }return regexMail.test(contact.email);
 };
-//Fonctions du formulaire
+//Mise en place de toutes les fonctions du formulaire
 function allForm (){
     inputFirstName();
     inputLastName();
@@ -209,34 +190,29 @@ function allForm (){
     inputMail();
 };
 allForm ();
-//Fonction d'envoie du formulaire
+/*Fonction d'envoie du formulaire
+Au clic de l'utilisateur, si le panier est vide message d'alerte, sinon si, l'un des champs est vide alors message d'alerte, sinon, si l'un des champs est faux, alors message d'erreur,
+sinon, boucle pour récupérer les produits du LS. Ensuite, récupération du formulaire de contact et le tableau de produits. Création de la variable d'envoie du formulaire et des produits au
+serveur. Par la suite, envoie du formulaire et des produits à l'api, suppression des produits du LS et redirection vers la page confirmation avec l'id du numéro de commande */
 function formOrder(){
     const elementOrder = document.getElementById("order");
-    //Ecoute de la variable elementOrder au clic de l'utilisateur
     elementOrder.addEventListener("click",(ev)=>{
         if(productInBasket.length===0 || productInBasket===null){
             alert("Votre panier est vide");
             ev.preventDefault();
-        }
-        //Si l'un des champs est vide alors message d'alerte, pas de renvoie vers la page confirmation
-        else if(!contact.firstName || !contact.lastName || !contact.address || !contact.city || !contact.email){
+        }else if(!contact.firstName || !contact.lastName || !contact.address || !contact.city || !contact.email){
             alert("Merci de renseigner les champs vides");
             ev.preventDefault();
-            //Sinon, si l'un des champs est faux, alors message d'erreur, pas de renvoie vers la page confirmation
         }else if(!inputFirstName()||!inputLastName()||!inputAddress()||!inputCity()||!inputMail()){
             alert("Merci de vérifier les champs de saisie")
             ev.preventDefault();
-        }
-        else{//Sinon, non-éxecution de l'évènement
+        }else{
             ev.preventDefault();
-            //Boucle pour récupérer les produits du LS
             let products=[];
             for(let i=0; i<productInBasket.length; i++){
                 products.push(productInBasket[i].idStorage);
             }
-            //Récupération du formulaire de contact et le tableau de produits
             const ordered = {contact, products,}
-            //Variable envoie du formulaire et les produits au serveur
             const options = {
                 method:'POST',
                 body: JSON.stringify(ordered),
@@ -244,13 +220,11 @@ function formOrder(){
                     "Content-Type": 'application/json',
                 }
             };
-            //Envoie du formulaire et des produits à l'api
             fetch(`http://localhost:3000/api/products/order`, options)
             .then((response)=>response.json())
             .then((data)=>{
                 localStorage.clear();
                 localStorage.setItem("orderId", data.orderId);
-                //Redirection vers la page confirmation avec l'id du numéro de commande
                 document.location.href =`confirmation.html?orderId=`+ data.orderId;
             });
         };
