@@ -104,8 +104,8 @@ function incrementationTotalPrice(qty,price){
     elementPrice.innerText = totalPrice;
 };
 /*Modification des produits de la page panier
-Sélection de l'élément HTML. Au moment du changement de qt, ciblage du pdt qui a été modifié. Ensuite, il faut remonter à l'élément que l'on veut. Comparaison entre les produits du LS.
-Puis mise à jour du LS, message d'alerte, mise à jour des totaux*/
+Sélection de l'élément HTML. Au moment du changement de qt, ciblage du pdt qui a été modifié. Ensuite, on remonte à l'élément que l'on veut. Comparaison entre les produits du LS.
+Création d'un nouveau fichier de produit. Mise à jour du LS, message d'alerte, mise à jour des totaux*/
 function inputModification(){
     const elementModification = document.querySelectorAll(".itemQuantity");
     for(const modification of elementModification){
@@ -123,8 +123,8 @@ function inputModification(){
     };
 };
 /*Suppression des produits de la page panier
-Au moment du clic sur le bouton, ciblage du pdt. Remonter à l'élément que l'on veut. Comparaison des pdts présents dans le LS. Filtre des éléments du panier, pour garder ceux qui
-ne sont pas supprimé. Mise à jour du localStorage. Suppression du pdt du html, message d'alerte, mise à jour des totaux*/
+Sélection de l'élément HTML. Au moment du clic sur le bouton, ciblage du pdt. Remonter à l'élément que l'on veut. Comparaison des pdts présents dans le LS. Filtre des éléments du panier,
+pour garder ceux qui ne sont pas supprimés. Mise à jour du localStorage. Suppression du pdt du html, message d'alerte, mise à jour des totaux*/
 function deleteElement(){
     let inputDelete = document.querySelectorAll(".deleteItem");
     for(const deletion of inputDelete){
