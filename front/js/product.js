@@ -1,14 +1,12 @@
-//                Lien entre la page d'accueil et les produits
+//             Lien entre la page d'accueil et les produits
 /*Mise en place d'une nouvelle URL.
-Utilisation de window pour récupérer la page courante*/
+Utilisation de window pour récupérer la page courante. Ensuite, création d'une nouvelle URL. Pour finir, création de l'id de la nouvelle URL*/
 const newUrl = window.location.search;
-//Création d'une nouvelle URL
 const urlParams = new URLSearchParams(newUrl);
-//Création de l'id de la nouvelle URL
 const id = urlParams.get('id');
 const urlProduct = `http://localhost:3000/api/products/${id}`;
 
-/*                 Stockage des variables d'affichage produit
+/*             Stockage des variables d'affichage produit
 Variable de l'image*/
 const image = document.querySelector(".item__img");
 const imageProduct = document.createElement("img");
@@ -25,21 +23,18 @@ const choiceQuantite = document.getElementById("quantity");
 //Variable du bouton "Ajouter au panier"
 const check = document.getElementById("addToCart");
 
-//Je fais appel à fetch pour l'URL de la page produit
+/*Je fais appel à fetch pour l'URL de la page produit. Première promesse, qui récupére la réponse en json. Deuxième promesse pour l'affichage des produits.
+Message d'erreur si le serveur ne répond pas*/
 fetch (urlProduct)
-/*Première promesse, qui récupére la réponse en json*/
     .then ((res) => {
         if(res.ok){
             return res.json();
         }
     })
-    //Deuxième promesse pour l'affichage des produits
     .then (product)
-    //Message d'erreur si le serveur ne répond pas
     .catch((error) =>{
         alert("Le serveur ne répond pas !!!");
     })
-
 //Utilisation d'une fonction pour l'insertion des éléments du produit
 function product (article){
     //Insertion des images
@@ -52,29 +47,30 @@ function product (article){
     pricePoduct.innerText = article.price;
     //Insertion de la description
     descriptionProduct.innerText= article.description;
-    /*Insertion de l'option
-    Utilisation d'une boucle*/
+    //Insertion de l'option. Utilisation d'une boucle
     for(let i=0; i<article.colors.length; i++){
         const option = document.createElement("option");
         option.innerText = article.colors[i];
         color.appendChild(option);
-    }   
-}
+    };  
+};
 //Conversion des données du format JSON au format Javascript
 let productInBasket = JSON.parse(localStorage.getItem("basket"));
 //Variable de confirmation d'ajout du produit
 const confirm = () => {
     alert ("Le produit a été ajouté au panier");
 };
-
 /*                 Ajout des produits dans le panier
 Récupération de la sélection de l'utilisateur et envoie dans le panier.
-Ecoute de la variable "check" au moment du clic de l'utilisateur*/
+Ecoute de la variable "check" au moment du clic de l'utilisateur. Demande de non-exécution de l'évenement. Récupération de la sélection utilisateur avec l'ID, la quantité et la couleur.*/
+/*Utilisation des conditions. Si on ajoute un produit au panier
+Si, la couleur est true entre les "" et la quantité est >0 et <=100, alors, si il y a des pdts dans le panier, utilisation de find qui renvoie la première valeur d'un élément dans un array.
+Si, le pdt existe déjà dans l'array, alors calcul pour ajouter les quantités dans l'array. Et envoie pour mise à jour dans le LS, message confirmation.
+Sinon, s'il n'y en a pas ajout d'une ligne+message confirmation. S'il n'y a aucun produit dans le localStorage, création d'un tableau, envoie dans le LS et message confirmation.
+Sinon, message d'alerte*/
 function sendInBasket(){
     check.addEventListener("click",(e)=>{
-        //Demande de non-exécution de l'évenement
         e.preventDefault();
-        //Récupération de la sélection utilisateur avec l'ID, la quantité et la couleur
         const choiceProduct =  {
             idStorage:id,
             quantiteStorage:choiceQuantite.value,
@@ -88,29 +84,19 @@ function sendInBasket(){
             //Conversion des données du format javaScript au format JSON
             localStorage.setItem("basket", JSON.stringify(productInBasket)); 
         }
-        /*Utilisation des conditions
-        Si on ajoute un produit au panier*/
-        //Si, la couleur =null ou =0 ou la quantité est <=0 ou >100, message d'alerte
         if(choiceProduct.couleurStorage !== "" && choiceProduct.quantiteStorage > 0 && choiceProduct.quantiteStorage <= 100){
             if(productInBasket){
-                // Utilisation de find qui renvoie la première valeur d'un élément dans un array
                 const productOrdered = productInBasket.find(element => element.idStorage === id && element.couleurStorage === color.value)
-                //Si, celui-ci existe déjà dans l'array
                 if(productOrdered){
-                    //Calcul pour ajouter les quantités dans l'array
                     let newQuantity = parseInt(choiceProduct.quantiteStorage) + parseInt(productOrdered.quantiteStorage);
                     productOrdered.quantiteStorage = newQuantity;
                     localStorage.setItem("basket", JSON.stringify(productInBasket));
                     confirm();
-                //Sinon, s'il n'y en a pas ajout d'une ligne
                 }else{
                     eltLocalStorage();
                     confirm();
                 }
-            }
-            //S'il n'y a aucun produit dans le localStorage
-            else{
-                //Création d'un tableau
+            }else{
                 productInBasket = [];
                 eltLocalStorage();
                 confirm();
