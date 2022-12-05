@@ -17,6 +17,8 @@ function displayProductInBasket(productInBasket){
         const articleSection = document.createElement("article");
         section.appendChild(articleSection);
         articleSection.className = "cart__item";
+        articleSection.setAttribute("data-id",`${product.idStorage}`);
+        articleSection.setAttribute("data-color",`${product.couleurStorage}`);
         //Insertion d'une div
         const divImage = document.createElement("div");
         articleSection.appendChild(divImage);
@@ -114,44 +116,44 @@ function inputModification(){
             ev.preventDefault();
             //Cibler le pdt qui a été mofifié
             ev.target;
-            console.log(ev.target);
             //Remonter à l'élément que l'on veut
             let selectionModification = modification.closest("article");
-            console.log(selectionModification);
-            const selectModif = productInBasket.find(element => element.id==selectionModification.dataset.id && element.couleur === selectionModification.dataset.color);
-            console.log(selectModif);
+            let selectModif = productInBasket.find(element => element.idStorage==selectionModification.dataset.id && element.couleurStorage === selectionModification.dataset.color);
+            selectModif.quantiteStorage=modification.value;
+            selectModif=productInBasket;
             //Mise à jour du localStorage+Mesage d'alerte + Mise à jour des totaux
             localStorage.setItem("basket", JSON.stringify(productInBasket));
-            /*alert("Le produit a été modifié")
-            location.reload();*/
+            alert("Le produit a été modifié");
+            location.reload();
         });
     };
 };
 //Suppression des produits de la page panier
 function deleteElement(){
-    let inputDelete = document.querySelector(".deleteItem");
-    //Au clic sur le bouton
-    inputDelete.addEventListener("click",(e)=>{
-    e.preventDefault();
-    //Cibler le pdt qui a été cliqué
-    e.target;
-    console.log(e.target);
-    //Remonter à l'élément que l'on veut
-    let elementArticle = inputDelete.closest('article');
-    console.log(elementArticle);
-    //Filtre des éléments du panier, pour garder ceux qui ne sont pas supprimé
-    const searchDeleteItem = productInBasket.find(element => element.id == elementArticle.dataset.id && element.couleur == elementArticle.dataset.color);
-    console.log(searchDeleteItem);
-    productInBasket = productInBasket.filter(elt => elt !==searchDeleteItem);
-    console.log(productInBasket = productInBasket.filter(elt => elt !==searchDeleteItem));
-    //Mise à jour du localStorage
-    localStorage.setItem('basket',JSON.stringify(productInBasket));
-    console.log(localStorage.setItem('basket',JSON.stringify(productInBasket)));
-    //Supprime le pdt du html+Message d'alerte+Mise à jour des totaux
-    elementArticle.remove();
-    alert("Le produit a été supprimé")
-    location.reload();
-    });
+    let inputDelete = document.querySelectorAll(".deleteItem");
+    for(const deletion of inputDelete){
+        //Au clic sur le bouton
+        deletion.addEventListener("click",(e)=>{
+        e.preventDefault();
+        //Cibler le pdt qui a été cliqué
+        e.target;
+        console.log(e.target);
+        //Remonter à l'élément que l'on veut
+        let elementArticle = deletion.closest('article');
+        console.log(elementArticle);
+        //Filtre des éléments du panier, pour garder ceux qui ne sont pas supprimé
+        const searchDeleteItem = productInBasket.find(element => element.idStorage == elementArticle.dataset.id && element.couleurStorage == elementArticle.dataset.color);
+        console.log(searchDeleteItem);
+        productInBasket = productInBasket.filter(elt => elt !==searchDeleteItem);
+        console.log(productInBasket = productInBasket.filter(elt => elt !==searchDeleteItem));
+        //Mise à jour du localStorage
+        localStorage.setItem('basket',JSON.stringify(productInBasket));
+        //Supprime le pdt du html+Message d'alerte+Mise à jour des totaux
+        elementArticle.remove();
+        alert("Le produit a été supprimé")
+        location.reload();
+        });
+    }
 };
 //                                     Confirmation de la commande
 //Expressions 
@@ -246,7 +248,7 @@ function formOrder(){
             fetch(`http://localhost:3000/api/products/order`, options)
             .then((response)=>response.json())
             .then((data)=>{
-                //localStorage.clear();
+                localStorage.clear();
                 localStorage.setItem("orderId", data.orderId);
                 //Redirection vers la page confirmation avec l'id du numéro de commande
                 document.location.href =`confirmation.html?orderId=`+ data.orderId;
