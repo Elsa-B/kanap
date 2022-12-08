@@ -156,12 +156,11 @@ let mailErrorMsg = fieldEmail.nextElementSibling;
 const regexText = /^[A-Za-zàâäéèêëïîôöùûüç]+$/;
 const regexAdress = /^[0-9]{1,5}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+/;
 const regexMail = /^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/;
-
+//Au changement de l'utilisateur, si la valeur de champ est différente du test regex, alors message d'erreur, sinon, pas de message
 function inputsForm(){
     fieldFirstName.addEventListener('change', function() {
         if (!regexText.test(fieldFirstName.value)) {
-            firstNameErrorMsg.innerText = "Merci de renseigner votre prénom";
-             
+            firstNameErrorMsg.innerText = "Merci de renseigner votre prénom";   
         }else{firstNameErrorMsg.innerText = "";  
         }
     });
@@ -191,12 +190,10 @@ function inputsForm(){
     });
 };
 inputsForm();
-
-
 /*Fonction d'envoie du formulaire
-Au clic de l'utilisateur, si le panier est vide message d'alerte, sinon si, l'un des champs est vide alors message d'alerte, sinon, si l'un des champs est faux, alors message d'erreur,
-sinon, boucle pour récupérer les produits du LS. Ensuite, récupération du formulaire de contact et le tableau de produits. Création de la variable d'envoie du formulaire et des produits au
-serveur. Par la suite, envoie du formulaire et des produits à l'api, suppression des produits du LS et redirection vers la page confirmation avec l'id du numéro de commande */
+Au clic de l'utilisateur, si le panier est vide message d'alerte, sinon si, l'un des champs est vide alors message d'alerte, sinon, si l'un des champs est faux, alors message d'erreur, sinon,
+création du fichier de contact, boucle pour récupérer les produits du LS. Ensuite, récupération du formulaire de contact et le tableau de produits. Création de la variable d'envoie du formulaire
+et des produits au serveur. Par la suite, envoie du formulaire et des produits à l'api, suppression du LS et redirection vers la page confirmation avec l'id du numéro de commande */
 function formOrder(){
     const elementOrder = document.getElementById("order");
     elementOrder.addEventListener("click",(ev)=>{
