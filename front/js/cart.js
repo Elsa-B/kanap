@@ -115,7 +115,6 @@ function inputModification(){
             let selectionModification = modification.closest("article");
             let selectModif = productInBasket.find(element => element.idStorage==selectionModification.dataset.id && element.couleurStorage === selectionModification.dataset.color);
             selectModif.quantiteStorage=modification.value;
-            selectModif=productInBasket;
             localStorage.setItem("basket", JSON.stringify(productInBasket));
             alert("Le produit a été modifié");
             location.reload();
@@ -141,55 +140,59 @@ function deleteElement(){
         });
     };
 };
+
 //                                     Confirmation de la commande
+let fieldFirstName = document.getElementById('firstName');
+let fieldLastName = document.getElementById('lastName');
+let fieldAddress = document.getElementById('address');
+let fieldCity = document.getElementById('city');
+let fieldEmail = document.getElementById('email');
+let firstNameErrorMsg = fieldFirstName.nextElementSibling;
+let lastNameErrorMsg = fieldLastName.nextElementSibling;
+let addressErrorMsg = fieldAddress.nextElementSibling;
+let cityErrorMsg = fieldCity.nextElementSibling;
+let mailErrorMsg = fieldEmail.nextElementSibling;
 //Expressions 
 const regexText = /^[A-Za-zàâäéèêëïîôöùûüç]+$/;
 const regexAdress = /^[0-9]{1,5}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+/;
 const regexMail = /^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/;
-let contact = {
-    firstName:document.getElementById("firstName").value,
-    lastName:document.getElementById("lastName").value,
-    address:document.getElementById("address").value,
-    city:document.getElementById("city").value,
-    email:document.getElementById("email").value,
-}
-/*Fonctions du formulaire
-Si le test du regex est différent de ce que l'on attend, alors message d'erreur. Fin de l'exécution de la fonction et renvoie la bonne valeur attendue*/
-function inputFirstName(){ 
-    if(!regexText.test(contact.firstName)){
-        document.getElementById("firstNameErrorMsg").innerText="Merci de renseigner votre prénom";
-    }return regexText.test(contact.firstName);
-};
-function inputLastName(){ 
-    if(!regexText.test(contact.lastName)){
-        document.getElementById("lastNameErrorMsg").innerText="Merci de renseigner votre nom";
-    }return regexText.test(contact.lastName);
 
+function inputsForm(){
+    fieldFirstName.addEventListener('change', function() {
+        if (!regexText.test(fieldFirstName.value)) {
+            firstNameErrorMsg.innerText = "Merci de renseigner votre prénom";
+             
+        }else{firstNameErrorMsg.innerText = "";  
+        }
+    });
+    fieldLastName.addEventListener('change', function() {
+        if (!regexText.test(fieldLastName.value)) {
+            lastNameErrorMsg.innerText = "Merci de renseigner votre nom";   
+        }else{lastNameErrorMsg.innerText = "";  
+        }
+    });
+    fieldAddress.addEventListener('change', function() {
+        if (!regexAdress.test(fieldAddress.value)) {
+            addressErrorMsg.innerText = "Merci de renseigner le numéro de voie et la rue";   
+        }else{addressErrorMsg.innerText = "";  
+        }
+    });
+    fieldCity.addEventListener('change', function() {
+        if (!regexAdress.test(fieldCity.value)) {
+            cityErrorMsg.innerText = "Merci de renseigner le code postal et la ville";   
+        }else{cityErrorMsg.innerText = "";  
+        }
+    });
+    fieldEmail.addEventListener('change', function() {
+        if (!regexMail.test(fieldEmail.value)) {
+            mailErrorMsg.innerText = "Exemple : devinci@paint.table";   
+        }else{mailErrorMsg.innerText = "";  
+        }
+    });
 };
-function inputAddress(){
-    if(!regexAdress.test(contact.address)){
-        document.getElementById("addressErrorMsg").innerText="Merci de renseigner le numéro de voie et la rue";
-    }return regexAdress.test(contact.address);
-};
-function inputCity(){
-    if(!regexAdress.test(contact.city)){
-        document.getElementById("cityErrorMsg").innerText="Merci de renseigner le code postal et la ville";
-    }return regexAdress.test(contact.city);
-};
-function inputMail(){
-    if(!regexMail.test(contact.email)){
-        document.getElementById("emailErrorMsg").innerText="Exemple : devinci@paint.table";
-    }return regexMail.test(contact.email);
-};
-//Mise en place de toutes les fonctions du formulaire
-function allForm (){
-    inputFirstName();
-    inputLastName();
-    inputAddress();
-    inputCity();
-    inputMail();
-};
-allForm ();
+inputsForm();
+
+
 /*Fonction d'envoie du formulaire
 Au clic de l'utilisateur, si le panier est vide message d'alerte, sinon si, l'un des champs est vide alors message d'alerte, sinon, si l'un des champs est faux, alors message d'erreur,
 sinon, boucle pour récupérer les produits du LS. Ensuite, récupération du formulaire de contact et le tableau de produits. Création de la variable d'envoie du formulaire et des produits au
@@ -197,17 +200,21 @@ serveur. Par la suite, envoie du formulaire et des produits à l'api, suppressio
 function formOrder(){
     const elementOrder = document.getElementById("order");
     elementOrder.addEventListener("click",(ev)=>{
+        ev.preventDefault();
         if(productInBasket.length===0 || productInBasket===null){
-            alert("Votre panier est vide");
-            ev.preventDefault();
-        }else if(!contact.firstName || !contact.lastName || !contact.address || !contact.city || !contact.email){
-            alert("Merci de renseigner les champs vides");
-            ev.preventDefault();
-        }else if(!inputFirstName()||!inputLastName()||!inputAddress()||!inputCity()||!inputMail()){
+           alert("Votre panier est vide");
+        }else if(!fieldFirstName.value || !fieldLastName.value || !fieldAddress.value || !fieldCity.value || !fieldEmail.value){
+            alert("Merci de renseigner les champs vides")
+        }else if(!regexText.test(fieldFirstName.value)||!regexText.test(fieldLastName.value)||!regexAdress.test(fieldAddress.value)||!regexAdress.test(fieldCity.value)||!regexMail.test(fieldEmail.value)){
             alert("Merci de vérifier les champs de saisie")
-            ev.preventDefault();
         }else{
-            ev.preventDefault();
+            let contact = {
+                firstName:fieldFirstName.value,
+                lastName:fieldLastName.value,
+                address:fieldAddress.value,
+                city:fieldCity.value,
+                email:fieldEmail.value,
+            }
             let products=[];
             for(let i=0; i<productInBasket.length; i++){
                 products.push(productInBasket[i].idStorage);
