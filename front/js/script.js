@@ -13,7 +13,7 @@ fetch ("http://localhost:3000/api/products")
         };
     };
     /*Fonction d'affichage des articles. Utilisation d'une boucle pour récupérer chaque produit.
-    Récupération des informations de l'id "items". Insertion des éléments à créer.*/
+    Récupération des informations de l'Id "items". Insertion des éléments à créer.*/
     function affichageArticles(articles){
         for (const product of articles){
             let cardItems = document.getElementById("items");
