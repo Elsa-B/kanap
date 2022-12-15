@@ -1,4 +1,6 @@
-//Je fais appel à fetch pour l'URL de l'API. Première promesse, qui récupére la réponse en json. Deuxième promesse avec ma fonction de contenu. Message d'erreur si le serveur ne répond pas.
+/*Je fais appel à fetch pour exécuter l'URL de l'API.
+Première promesse, qui récupére la réponse en json.
+Deuxième promesse avec ma fonction de contenu. Message d'erreur si le serveur ne répond pas.*/
 fetch ("http://localhost:3000/api/products")
     .then(reponse)
     .then(affichageArticles)
@@ -10,7 +12,8 @@ fetch ("http://localhost:3000/api/products")
             return res.json();
         };
     };
-    //Fonction d'affichage des articles. Utilisation du boucle pour récupérer chaque produit. Récupération des informations de l'id "items". Insertion des éléments à créer.
+    /*Fonction d'affichage des articles. Utilisation d'une boucle pour récupérer chaque produit.
+    Récupération des informations de l'id "items". Insertion des éléments à créer.*/
     function affichageArticles(articles){
         for (const product of articles){
             let cardItems = document.getElementById("items");
