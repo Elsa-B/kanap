@@ -1,7 +1,8 @@
 let productInBasket = JSON.parse(localStorage.getItem("basket"));
 /*Fonction permettant d'afficher tous les produits du localStorage
-Pour chaque produit, appel de l'api pour récupération des éléments. Retour de la première promesse en json. Deuxième promesse permettant l'affichage des informations des produit. Insertion
-des éléments. Utilisation des fonctions quantité total, prix total, modification et suppression*/
+Pour chaque produit, appel de l'api pour récupération des éléments. Retour de la première promesse en json.
+Deuxième promesse permettant l'affichage des informations des produit. Insertion des éléments.
+Utilisation des fonctions quantité total, prix total, modification et suppression*/
 function displayProductInBasket(productInBasket){
     for(let product of productInBasket){
         fetch (`http://localhost:3000/api/products/${product.idStorage}`)
@@ -86,7 +87,8 @@ function displayProductInBasket(productInBasket){
 };
 displayProductInBasket(productInBasket);
 /*Fonction et variables de la quantité total
-Sélection de l'ID dans html. Utilisation de parseInt pour convertir un argument en une chaîne de caractère. Calcul totalqt=totalqt+quantitysum. Envoie du calcul avec inner.text*/
+Sélection de l'ID dans html. Utilisation de parseInt pour convertir un argument en une chaîne de caractère.
+Calcul totalqt = totalqt + quantitysum. Affichage du calcul avec inner.text*/
 const elementQuantity = document.getElementById("totalQuantity");
 let totalquantity =0;
 function totalQuantities(quantity){
@@ -95,7 +97,8 @@ function totalQuantities(quantity){
     elementQuantity.innerText = totalquantity;
 };
 /*Fonction et varirables du prix total
-Sélection de l'ID dans html. Il faut réaliser le calcul de la qt*prix. Ensuite calcul totalPrice=tatalPrice*priceOfProduct. Insérer le prix dans le total avec inner.text*/
+Sélection de l'ID dans html. Réalisation du calcul de la qt*prix.
+Ensuite calcul totalPrice = totalPrice * priceOfProduct. Affichage du prix avec inner.text*/
 let elementPrice = document.getElementById("totalPrice");
 let totalPrice = 0;
 function incrementationTotalPrice(qty,price){
@@ -104,8 +107,10 @@ function incrementationTotalPrice(qty,price){
     elementPrice.innerText = totalPrice;
 };
 /*Modification des produits de la page panier
-Sélection de l'élément HTML. Au moment du changement de qt, ciblage du pdt qui a été modifié. Ensuite, on remonte à l'élément que l'on veut. Comparaison entre les produits du LS.
-Création d'un nouveau fichier de produit. Mise à jour du LS, message d'alerte, mise à jour des totaux*/
+Sélection de l'élément HTML. Boucle pour chaque produit modifié. Au moment du changement de qt, pas de renvoie,
+ciblage du pdt qui a été modifié. Ensuite, on remonte à l'élément que l'on veut.
+Comparaison entre les produits du LS. Création d'un nouveau fichier de produit.
+Mise à jour du LS, message d'alerte, mise à jour des totaux*/
 function inputModification(){
     const elementModification = document.querySelectorAll(".itemQuantity");
     for(const modification of elementModification){
@@ -122,8 +127,10 @@ function inputModification(){
     };
 };
 /*Suppression des produits de la page panier
-Sélection de l'élément HTML. Au moment du clic sur le bouton, ciblage du pdt. Remonter à l'élément que l'on veut. Comparaison des pdts présents dans le LS. Filtre des éléments du panier,
-pour garder ceux qui ne sont pas supprimés. Mise à jour du localStorage. Suppression du pdt du html, message d'alerte, mise à jour des totaux*/
+Sélection de l'élément HTML. Boucle pour chaque produit supprimé. Au moment du clic sur le bouton, pas de renvoie,
+ciblage du pdt. Remonter à l'élément que l'on veut. Comparaison des pdts présents dans le LS. Filtre
+des éléments du panier pour garder ceux qui ne sont pas supprimés. Mise à jour du localStorage.
+Suppression du pdt du html, message d'alerte, mise à jour des totaux*/
 function deleteElement(){
     let inputDelete = document.querySelectorAll(".deleteItem");
     for(const deletion of inputDelete){
@@ -156,7 +163,8 @@ let mailErrorMsg = fieldEmail.nextElementSibling;
 const regexText = /^[A-Za-zàâäéèêëïîôöùûüç]+$/;
 const regexAdress = /^[0-9]{1,5}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+/;
 const regexMail = /^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/;
-//Au changement de l'utilisateur, si la valeur de champ est différente du test regex, alors message d'erreur, sinon, pas de message
+/*Au changement de l'utilisateur, si la valeur de champ est différente du test regex, alors message d'erreur,
+sinon, pas de message*/
 function inputsForm(){
     fieldFirstName.addEventListener('change', function() {
         if (!regexText.test(fieldFirstName.value)) {
@@ -191,9 +199,12 @@ function inputsForm(){
 };
 inputsForm();
 /*Fonction d'envoie du formulaire
-Au clic de l'utilisateur, si le panier est vide message d'alerte, sinon si, l'un des champs est vide alors message d'alerte, sinon, si l'un des champs est faux, alors message d'erreur, sinon,
-création du fichier de contact, boucle pour récupérer les produits du LS. Ensuite, récupération du formulaire de contact et le tableau de produits. Création de la variable d'envoie du formulaire
-et des produits au serveur. Par la suite, envoie du formulaire et des produits à l'api, suppression du LS et redirection vers la page confirmation avec l'id du numéro de commande */
+Au clic de l'utilisateur, si le panier est vide message d'alerte, sinon si, l'un des champs est vide 
+alors message d'alerte, sinon si, l'un des champs est faux, alors message d'erreur, sinon,
+création du fichier de contact, boucle pour récupérer les produits du LS. Ensuite,
+récupération du formulaire de contact et le tableau de produits. Création de la variable d'envoie du formulaire
+et des produits au serveur. Par la suite, envoie du formulaire et des produits à l'api,
+suppression du LS et redirection vers la page confirmation avec l'id du numéro de commande */
 function formOrder(){
     const elementOrder = document.getElementById("order");
     elementOrder.addEventListener("click",(ev)=>{
@@ -227,8 +238,8 @@ function formOrder(){
             fetch(`http://localhost:3000/api/products/order`, options)
             .then((response)=>response.json())
             .then((data)=>{
-                localStorage.clear();
                 localStorage.setItem("orderId", data.orderId);
+                localStorage.clear();
                 document.location.href =`confirmation.html?orderId=`+ data.orderId;
             });
         };
